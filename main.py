@@ -45,13 +45,15 @@ def create_app() -> Flask:
     
     return app, socketio
 
+# Create app instance for production deployment
+app, socketio = create_app()
+
+# Create tables in app context
+with app.app_context():
+    create_tables()
+
 def main():
     """Application entry point - micro and focused"""
-    app, socketio = create_app()
-    
-    with app.app_context():
-        create_tables()
-    
     socketio.run(app, debug=True, port=5000, host='127.0.0.1')
 
 if __name__ == '__main__':
