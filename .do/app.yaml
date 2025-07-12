@@ -5,8 +5,8 @@ services:
   - name: web
     source_dir: /
     github:
-      repo: your-username/unibabel-repo
-      branch: main
+      repo: TheTrueArgonaut/UniBabel-Web
+      branch: master
     run_command: gunicorn --worker-class eventlet --workers 2 --bind 0.0.0.0:8080 main:app
     environment_slug: python
     instance_count: 1
