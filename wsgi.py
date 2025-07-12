@@ -1,17 +1,9 @@
 from flask import Flask
-
-# Create Flask app
 app = Flask(__name__)
 
 @app.route('/')
-def hello():
-    return 'Hello from UniBabel!'
-
-@app.route('/health')
-def health():
-    return {'status': 'ok'}
+def home():
+    return 'UniBabel is Live!'
 
 if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=8080)
