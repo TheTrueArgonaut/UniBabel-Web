@@ -1,0 +1,116 @@
+<div class="mb-2">
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border border-gray-700/50">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <i class="ri-global-line text-primary text-sm"></i>
+                </div>
+                Babel Feed
+            </h3>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-400">Connect globally</span>
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Post Creation Area -->
+        <div class="bg-[#111111] rounded-xl p-3 mb-4 border border-gray-800">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <i class="ri-user-3-line text-primary text-sm"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-medium text-white">{{ user.display_name or user.username
+                        }}</h4>
+                    <p class="text-gray-400 text-xs">Share something with the world</p>
+                </div>
+            </div>
+
+            <!-- Post Type Selection -->
+            <div class="flex flex-wrap gap-1 mb-3">
+                <button class="post-type-btn active px-2 py-1 rounded-lg bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-colors text-xs"
+                        data-type="text">
+                    💬 General
+                </button>
+                <button class="post-type-btn px-2 py-1 rounded-lg bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 transition-colors text-xs"
+                        data-type="looking_for">
+                    🔍 Looking For
+                </button>
+                <button class="post-type-btn px-2 py-1 rounded-lg bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 transition-colors text-xs"
+                        data-type="topic">
+                    💡 Topic
+                </button>
+                <button class="post-type-btn px-2 py-1 rounded-lg bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 transition-colors text-xs"
+                        data-type="language">
+                    🌍 Language
+                </button>
+                <button class="post-type-btn px-2 py-1 rounded-lg bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 transition-colors text-xs"
+                        data-type="mood">
+                    😊 Mood
+                </button>
+            </div>
+
+            <!-- Post Input -->
+            <div class="relative">
+                <textarea
+                        id="postContent"
+                        class="w-full bg-gray-900 text-white rounded-lg px-3 py-2 border border-gray-700 focus:border-primary/50 focus:outline-none resize-none min-h-[60px] placeholder-gray-400 text-sm"
+                        placeholder="What's happening? Share your thoughts, find chat partners, or start a discussion..."
+                        maxlength="500"
+                ></textarea>
+
+                <!-- Character Counter and Actions -->
+                <div class="flex items-center justify-between mt-2">
+                    <div class="flex items-center gap-3">
+                        <div class="text-xs text-gray-400">
+                            <span id="charCount">0</span>/500
+                        </div>
+                        <div id="errorDisplay" class="text-red-400 text-xs hidden"></div>
+                    </div>
+                    <button
+                            id="postBtn"
+                            class="bg-primary text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                            disabled
+                    >
+                        Babel It!
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline/Feed -->
+        <div class="space-y-3">
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-6">
+                <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                <p class="text-gray-400 mt-2 text-sm">Loading your timeline...</p>
+            </div>
+
+            <!-- Timeline Posts -->
+            <div id="timelinePosts" class="space-y-3" style="display: none;"></div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-8 hidden">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                    <i class="ri-global-line text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Welcome to Babel!</h3>
+                <p class="text-gray-400 text-sm">Be the first to share something amazing with the
+                    world.</p>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="flex items-center justify-center gap-3 mt-6 hidden">
+                <button id="prevBtn"
+                        class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs">
+                    Previous
+                </button>
+                <span id="pageInfo" class="text-gray-400 text-xs">Page 1 of 1</span>
+                <button id="nextBtn"
+                        class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,209 @@
+<!-- 📝 REGISTER FOOTER MICROSERVICE -->
+<div class="form-footer">
+    <div class="terms-agreement">
+        <div class="checkbox-container">
+            <input type="checkbox" class="sr-only" id="terms" name="terms" required/>
+            <div class="custom-checkbox" onclick="toggleCheckbox('terms', this)">
+                <i class="ri-check-line checkbox-icon"></i>
+            </div>
+        </div>
+        <div class="terms-text">
+            <p class="terms-label">
+                I agree to the <a href="/terms-of-service" target="_blank" class="terms-link">Terms
+                of Service</a> and <a href="/privacy-policy" target="_blank" class="terms-link">Privacy
+                Policy</a>
+            </p>
+        </div>
+    </div>
+
+    <button type="submit" id="submitButton" class="btn-primary">
+        Create Account
+    </button>
+
+    <div id="error-message" class="error-display"></div>
+
+    <div class="login-link">
+        <p class="login-text">
+            Already have an account?
+            <a href="{{ url_for('auth.login') }}" class="login-anchor">Login here</a>
+        </p>
+    </div>
+
+    <!-- Translation Quality Notice -->
+    <div id="translation-notice" class="translation-notice hidden">
+        <div class="notice-content">
+            <i class="ri-information-line"></i>
+            <div>
+                <h6>Translation Quality Notice</h6>
+                <p>We strive for accurate translations using advanced AI technology. While our
+                    system is highly reliable, no automated translation is perfect. Help us improve
+                    by reporting translation issues to <a
+                            href="mailto:sakelariosall@argonautdigitalventures.com"
+                            class="feedback-link">sakelariosall@argonautdigitalventures.com</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-footer {
+        margin-top: 24px;
+    }
+
+    .terms-agreement {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+
+    .custom-checkbox {
+        width: 16px;
+        height: 16px;
+        background: rgba(55, 65, 81, 1);
+        border: 1px solid var(--register-border);
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .custom-checkbox.checked {
+        background: var(--register-primary);
+        border-color: var(--register-primary);
+    }
+
+    .checkbox-icon {
+        color: white;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .custom-checkbox.checked .checkbox-icon {
+        opacity: 1;
+    }
+
+    .terms-text {
+        margin-left: 12px;
+        flex: 1;
+    }
+
+    .terms-label {
+        font-size: 14px;
+        color: var(--register-text-secondary);
+        margin: 0;
+    }
+
+    .terms-link {
+        color: var(--register-primary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .terms-link:hover {
+        text-decoration: underline;
+        color: #b91c1c;
+    }
+
+    .terms-link:focus {
+        outline: 2px solid var(--register-primary);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+
+    .error-display {
+        margin-top: 16px;
+        padding: 12px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
+        color: var(--register-error);
+        font-size: 14px;
+        display: none;
+    }
+
+    .error-display.show {
+        display: block;
+    }
+
+    .login-link {
+        margin-top: 24px;
+        text-align: center;
+    }
+
+    .login-text {
+        font-size: 14px;
+        color: var(--register-text-secondary);
+        margin: 0;
+    }
+
+    .login-anchor {
+        color: var(--register-primary);
+        text-decoration: none;
+    }
+
+    /* Translation Quality Notice */
+    .translation-notice {
+        margin-top: 20px;
+        padding: 16px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 8px;
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    .translation-notice.hidden {
+        display: none;
+    }
+    
+    .notice-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .notice-content i {
+        color: #3b82f6;
+        font-size: 1.25rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+    
+    .notice-content h6 {
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 4px;
+        font-size: 0.875rem;
+    }
+    
+    .notice-content p {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        line-height: 1.4;
+        margin: 0;
+    }
+    
+    .feedback-link {
+        color: #3b82f6;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    
+    .feedback-link:hover {
+        text-decoration: underline;
+        color: #60a5fa;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

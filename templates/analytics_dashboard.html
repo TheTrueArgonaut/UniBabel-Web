@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 UniBabel Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .bg-gradient-dark { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
+        .card-hover:hover { transform: translateY(-2px); transition: transform 0.2s ease; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+<!-- Header -->
+<header class="bg-gray-800 border-b border-gray-700 p-4">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                <i class="ri-bar-chart-2-line text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">UniBabel Analytics Dashboard</h1>
+                <p class="text-gray-400 text-sm">Real-time metrics and insights</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <select id="timeRange"
+                    class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600">
+                <option value="30">Last 30 days</option>
+                <option value="7">Last 7 days</option>
+                <option value="1">Last 24 hours</option>
+            </select>
+            <button onclick="refreshDashboard()"
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2">
+                <i class="ri-refresh-line"></i>
+                <span>Refresh</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="p-6">
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gray-800 p-6 rounded-xl card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-400 text-sm">Total Users</h3>
+                    <p class="text-3xl font-bold text-white" id="total-users">0</p>
+                    <p class="text-green-400 text-sm" id="users-change">+0%</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                    <i class="ri-user-line text-2xl text-blue-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-400 text-sm">Messages</h3>
+                    <p class="text-3xl font-bold text-white" id="total-messages">0</p>
+                    <p class="text-blue-400 text-sm" id="messages-change">0/user</p>
+                </div>
+                <div class="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                    <i class="ri-message-3-line text-2xl text-green-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-400 text-sm">Translations</h3>
+                    <p class="text-3xl font-bold text-white" id="total-translations">0</p>
+                    <p class="text-purple-400 text-sm" id="translations-change">0%</p>
+                </div>
+                <div class="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
+                    <i class="ri-translate-2 text-2xl text-purple-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-400 text-sm">Cache Hit Rate</h3>
+                    <p class="text-3xl font-bold text-white" id="cache-hit-rate">0%</p>
+                    <p class="text-yellow-400 text-sm" id="cache-status">Needs Work</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-600/20 rounded-xl flex items-center justify-center">
+                    <i class="ri-database-2-line text-2xl text-yellow-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- User Growth Chart -->
+        <div class="bg-gray-800 p-6 rounded-xl">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="ri-line-chart-line text-blue-400"></i>
+                User Growth
+            </h3>
+            <canvas id="userGrowthChart" height="200"></canvas>
+        </div>
+
+        <!-- Message Volume Chart -->
+        <div class="bg-gray-800 p-6 rounded-xl">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="ri-bar-chart-line text-green-400"></i>
+                Message Volume
+            </h3>
+            <canvas id="messageVolumeChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Language Distribution & Platform Health -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Top Languages -->
+        <div class="bg-gray-800 p-6 rounded-xl">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="ri-global-line text-purple-400"></i>
+                Top Languages
+            </h3>
+            <div id="languagesList" class="space-y-3">
+                <div class="text-center text-gray-400 py-8">No data</div>
+            </div>
+        </div>
+
+        <!-- Platform Health -->
+        <div class="bg-gray-800 p-6 rounded-xl">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="ri-heart-pulse-line text-red-400"></i>
+                Platform Health
+            </h3>
+            <div id="healthStatus" class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                    <span class="text-gray-300">Database</span>
+                    <span class="text-red-400">ERROR</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                    <span class="text-gray-300">24h Activity</span>
+                    <span class="text-gray-400">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-gray-800 p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="ri-time-line text-blue-400"></i>
+            Recent Activity
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                <tr class="text-gray-400 text-sm border-b border-gray-700">
+                    <th class="text-left py-3">Date</th>
+                    <th class="text-left py-3">New Users</th>
+                    <th class="text-left py-3">Messages</th>
+                    <th class="text-left py-3">Translations</th>
+                </tr>
+                </thead>
+                <tbody id="recentActivity">
+                <tr>
+                    <td colspan="4" class="text-center py-8 text-gray-400">Loading...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Export Controls -->
+    <div class="mt-8 flex justify-end gap-4">
+        <button onclick="exportData('json')"
+                class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg flex items-center gap-2">
+            <i class="ri-download-line"></i>
+            Export JSON
+        </button>
+        <button onclick="exportData('csv')"
+                class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg flex items-center gap-2">
+            <i class="ri-file-excel-line"></i>
+            Export CSV
+        </button>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script>
+
+    let analyticsData = null;
+    let userGrowthChart = null;
+    let messageVolumeChart = null;
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        loadDashboard();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboard, 30000);
+
+        // Time range selector
+        document.getElementById('timeRange').addEventListener('change', function() {
+            loadDashboard();
+        });
+    });
+
+    async function loadDashboard() {
+        try {
+            const days = document.getElementById('timeRange').value;
+            const response = await fetch(`/api/admin/analytics?days=${days}`);
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            analyticsData = data;
+            updateMetrics(data);
+            updateCharts(data);
+            updateLanguages(data);
+            updateHealth(data);
+            updateRecentActivity(data);
+
+        } catch (error) {
+            console.error('Dashboard load error:', error);
+            showError('Failed to load dashboard data: ' + error.message);
+        }
+    }
+
+    function updateMetrics(data) {
+        const users = data.users || {};
+        const messages = data.messages || {};
+
+        document.getElementById('total-users').textContent = users.total_users || 0;
+        document.getElementById('users-change').textContent = `+${users.growth_rate || 0}%`;
+
+        document.getElementById('total-messages').textContent = messages.total_messages || 0;
+        document.getElementById('messages-change').textContent = `${messages.total_messages / Math.max(users.total_users, 1) || 0}/user`;
+
+        document.getElementById('total-translations').textContent = messages.total_translations || 0;
+        document.getElementById('translations-change').textContent = `${messages.translation_rate || 0}%`;
+
+        document.getElementById('cache-hit-rate').textContent = `${messages.cache_hit_rate || 0}%`;
+        document.getElementById('cache-status').textContent =
+            (messages.cache_hit_rate || 0) > 80 ? 'Excellent' :
+            (messages.cache_hit_rate || 0) > 60 ? 'Good' : 'Needs Work';
+    }
+
+    function updateCharts(data) {
+        const users = data.users || {};
+        const messages = data.messages || {};
+
+        // User Growth Chart
+        if (userGrowthChart) {
+            userGrowthChart.destroy();
+        }
+
+        const userCtx = document.getElementById('userGrowthChart').getContext('2d');
+        userGrowthChart = new Chart(userCtx, {
+            type: 'line',
+            data: {
+                labels: (users.daily_registrations || []).map(d => new Date(d.date).toLocaleDateString()),
+                datasets: [{
+                    label: 'New Users',
+                    data: (users.daily_registrations || []).map(d => d.count),
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#9CA3AF' },
+                        grid: { color: '#374151' }
+                    },
+                    x: {
+                        ticks: { color: '#9CA3AF' },
+                        grid: { color: '#374151' }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#9CA3AF' } }
+                }
+            }
+        });
+
+        // Message Volume Chart
+        if (messageVolumeChart) {
+            messageVolumeChart.destroy();
+        }
+
+        const messageCtx = document.getElementById('messageVolumeChart').getContext('2d');
+        messageVolumeChart = new Chart(messageCtx, {
+            type: 'bar',
+            data: {
+                labels: (messages.daily_volume || []).map(d => new Date(d.date).toLocaleDateString()),
+                datasets: [{
+                    label: 'Messages',
+                    data: (messages.daily_volume || []).map(d => d.count),
+                    backgroundColor: '#10B981',
+                    borderColor: '#059669',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#9CA3AF' },
+                        grid: { color: '#374151' }
+                    },
+                    x: {
+                        ticks: { color: '#9CA3AF' },
+                        grid: { color: '#374151' }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#9CA3AF' } }
+                }
+            }
+        });
+    }
+
+    function updateLanguages(data) {
+        const languages = data.languages || {};
+        const languagesList = document.getElementById('languagesList');
+
+        if (!languages.user_languages || languages.user_languages.length === 0) {
+            languagesList.innerHTML = '<div class="text-center text-gray-400 py-8">No data</div>';
+            return;
+        }
+
+        languagesList.innerHTML = languages.user_languages.map(lang => `
+            <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <span class="text-gray-300">${lang.lang}</span>
+                <span class="text-purple-400 font-bold">${lang.count}</span>
+            </div>
+        `).join('');
+    }
+
+    function updateHealth(data) {
+        const health = data.health || {};
+        const healthStatus = document.getElementById('healthStatus');
+
+        const services = health.system_status || {};
+        const activity = health.recent_activity || {};
+
+        healthStatus.innerHTML = `
+            <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <span class="text-gray-300">Database</span>
+                <span class="text-${services.database === 'healthy' ? 'green' : 'red'}-400">
+                    ${services.database || 'ERROR'}
+                </span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <span class="text-gray-300">24h Activity</span>
+                <span class="text-blue-400">${activity.translations_24h || 0}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <span class="text-gray-300">Uptime</span>
+                <span class="text-green-400">${activity.uptime || 0}%</span>
+            </div>
+        `;
+    }
+
+    function updateRecentActivity(data) {
+        const trends = data.daily_trends || [];
+        const recentActivity = document.getElementById('recentActivity');
+
+        if (trends.length === 0) {
+            recentActivity.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-400">No data</td></tr>';
+            return;
+        }
+
+        recentActivity.innerHTML = trends.slice(-7).map(day => `
+            <tr class="border-b border-gray-700">
+                <td class="py-3 text-gray-300">${new Date(day.date).toLocaleDateString()}</td>
+                <td class="py-3 text-blue-400">${day.new_users || 0}</td>
+                <td class="py-3 text-green-400">${day.sales || 0}</td>
+                <td class="py-3 text-purple-400">${day.revenue || 0}</td>
+            </tr>
+        `).join('');
+    }
+
+    function refreshDashboard() {
+        loadDashboard();
+    }
+
+    function exportData(format) {
+        if (!analyticsData) {
+            alert('No data to export');
+            return;
+        }
+
+        const filename = `unibabel_analytics_${new Date().toISOString().split('T')[0]}.${format}`;
+
+        if (format === 'json') {
+            const blob = new Blob([JSON.stringify(analyticsData, null, 2)], {type: 'application/json'});
+            downloadFile(blob, filename);
+        } else if (format === 'csv') {
+            const csv = convertToCSV(analyticsData);
+            const blob = new Blob([csv], {type: 'text/csv'});
+            downloadFile(blob, filename);
+        }
+    }
+
+    function convertToCSV(data) {
+        const headers = ['Date', 'New Users', 'Messages', 'Translations'];
+        const rows = (data.daily_trends || []).map(day => [
+            new Date(day.date).toLocaleDateString(),
+            day.new_users || 0,
+            day.sales || 0,
+            day.revenue || 0
+        ]);
+
+        return [headers, ...rows].map(row => row.join(',')).join('\n');
+    }
+
+    function downloadFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-4 rounded-lg z-50';
+        errorDiv.textContent = message;
+        document.body.appendChild(errorDiv);
+
+        setTimeout(() => {
+            document.body.removeChild(errorDiv);
+        }, 5000);
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!-- Settings Notifications Component -->
+<section class="settings-card" aria-labelledby="notifications-heading">
+    <h3 id="notifications-heading">🔔 Notifications</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Message Notifications</h4>
+            <p>Get notified when you receive new messages</p>
+        </div>
+        <label class="switch" for="messageNotifications">
+            <input type="checkbox" id="messageNotifications" checked
+                   aria-describedby="message-notifications-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="message-notifications-help" class="sr-only">Receive notifications for new
+            messages
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Sound Notifications</h4>
+            <p>Play sounds for notifications</p>
+        </div>
+        <label class="switch" for="soundNotifications">
+            <input type="checkbox" id="soundNotifications" checked
+                   aria-describedby="sound-notifications-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="sound-notifications-help" class="sr-only">Play notification sounds for new messages
+            and alerts
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Translation Alerts</h4>
+            <p>Get notified when translations are ready</p>
+        </div>
+        <label class="switch" for="translationAlerts">
+            <input type="checkbox" id="translationAlerts"
+                   aria-describedby="translation-alerts-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="translation-alerts-help" class="sr-only">Receive notifications when message
+            translations are completed
+        </div>
+    </div>
+</section>

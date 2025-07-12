@@ -1,0 +1,120 @@
+<!-- 🎛️ BOT DETECTION CONTROLS MICROSERVICE - SRIMI: Single Responsibility for Sensitivity Controls -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- Adult Detection Control -->
+    <div class="bg-gray-700/30 rounded-xl p-6 border border-gray-600/50">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <i class="ri-user-line text-xl text-blue-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Adult Detection (18+)</h3>
+                <p class="text-gray-400 text-sm">Adjust sensitivity for adult users</p>
+            </div>
+        </div>
+
+        <!-- Adult Sensitivity Slider -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <label class="text-gray-300 font-medium">Sensitivity Level</label>
+                <span class="text-blue-400 font-bold text-lg" id="adult-sensitivity-value">5</span>
+            </div>
+            <div class="relative">
+                <input type="range" id="adult-sensitivity-slider"
+                       class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer slider-adult"
+                       min="1" max="10" value="5" step="1">
+                <div class="flex justify-between text-xs text-gray-400 mt-2">
+                    <span>Lenient</span>
+                    <span>Balanced</span>
+                    <span>Strict</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adult Threshold Display -->
+        <div class="bg-gray-800/50 rounded-lg p-4 mb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-gray-300">Detection Threshold</span>
+                <span class="text-blue-400 font-mono" id="adult-threshold">0.60</span>
+            </div>
+            <div class="w-full bg-gray-600 rounded-full h-2">
+                <div class="bg-blue-400 h-2 rounded-full transition-all duration-300"
+                     id="adult-threshold-bar" style="width: 60%"></div>
+            </div>
+        </div>
+
+        <!-- Adult Preset Buttons -->
+        <div class="flex gap-2">
+            <button class="flex-1 bg-green-500/10 text-green-400 px-3 py-2 rounded-lg hover:bg-green-500/20 transition-colors text-sm"
+                    onclick="setAdultPreset('lenient')">
+                <i class="ri-thumb-up-line mr-1"></i>Lenient
+            </button>
+            <button class="flex-1 bg-yellow-500/10 text-yellow-400 px-3 py-2 rounded-lg hover:bg-yellow-500/20 transition-colors text-sm"
+                    onclick="setAdultPreset('balanced')">
+                <i class="ri-scales-line mr-1"></i>Balanced
+            </button>
+            <button class="flex-1 bg-red-500/10 text-red-400 px-3 py-2 rounded-lg hover:bg-red-500/20 transition-colors text-sm"
+                    onclick="setAdultPreset('strict')">
+                <i class="ri-shield-line mr-1"></i>Strict
+            </button>
+        </div>
+    </div>
+
+    <!-- Teen Protection Control -->
+    <div class="bg-gray-700/30 rounded-xl p-6 border border-gray-600/50">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                <i class="ri-user-heart-line text-xl text-yellow-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Teen Protection (13-17)</h3>
+                <p class="text-gray-400 text-sm">Enhanced protection for minors</p>
+            </div>
+        </div>
+
+        <!-- Teen Sensitivity Slider -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <label class="text-gray-300 font-medium">Protection Level</label>
+                <span class="text-yellow-400 font-bold text-lg" id="teen-sensitivity-value">7</span>
+            </div>
+            <div class="relative">
+                <input type="range" id="teen-sensitivity-slider"
+                       class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer slider-teen"
+                       min="1" max="10" value="7" step="1">
+                <div class="flex justify-between text-xs text-gray-400 mt-2">
+                    <span>Basic</span>
+                    <span>Enhanced</span>
+                    <span>Maximum</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teen Threshold Display -->
+        <div class="bg-gray-800/50 rounded-lg p-4 mb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-gray-300">Protection Threshold</span>
+                <span class="text-yellow-400 font-mono" id="teen-threshold">0.40</span>
+            </div>
+            <div class="w-full bg-gray-600 rounded-full h-2">
+                <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                     id="teen-threshold-bar" style="width: 40%"></div>
+            </div>
+        </div>
+
+        <!-- Teen Preset Buttons -->
+        <div class="flex gap-2">
+            <button class="flex-1 bg-blue-500/10 text-blue-400 px-3 py-2 rounded-lg hover:bg-blue-500/20 transition-colors text-sm"
+                    onclick="setTeenPreset('basic')">
+                <i class="ri-shield-check-line mr-1"></i>Basic
+            </button>
+            <button class="flex-1 bg-orange-500/10 text-orange-400 px-3 py-2 rounded-lg hover:bg-orange-500/20 transition-colors text-sm"
+                    onclick="setTeenPreset('enhanced')">
+                <i class="ri-shield-star-line mr-1"></i>Enhanced
+            </button>
+            <button class="flex-1 bg-red-500/10 text-red-400 px-3 py-2 rounded-lg hover:bg-red-500/20 transition-colors text-sm"
+                    onclick="setTeenPreset('maximum')">
+                <i class="ri-shield-keyhole-line mr-1"></i>Maximum
+            </button>
+        </div>
+    </div>
+</div>

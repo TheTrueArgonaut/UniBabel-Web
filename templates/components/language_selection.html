@@ -1,0 +1,189 @@
+<!-- LANGUAGE SELECTION MICROSERVICE - Single Responsibility: Primary language selection -->
+<div class="form-group">
+    <label class="form-label">Language <span class="text-red-400">*</span></label>
+    <div class="relative">
+        <div class="input-icon">
+            <i class="ri-global-line"></i>
+        </div>
+        <select id="preferred_language" name="preferred_language" required class="form-select">
+            <option value="">Select your primary language</option>
+
+            <!-- English Variants -->
+            <optgroup label="English">
+                <option value="EN-US">English (American)</option>
+                <option value="EN-GB">English (British)</option>
+            </optgroup>
+
+            <!-- European Languages -->
+            <optgroup label="European Languages">
+                <option value="BG">Bulgarian</option>
+                <option value="CS">Czech</option>
+                <option value="DA">Danish</option>
+                <option value="DE">German</option>
+                <option value="EL">Greek</option>
+                <option value="ET">Estonian</option>
+                <option value="FI">Finnish</option>
+                <option value="FR">French</option>
+                <option value="HU">Hungarian</option>
+                <option value="IT">Italian</option>
+                <option value="LT">Lithuanian</option>
+                <option value="LV">Latvian</option>
+                <option value="NB">Norwegian Bokmål</option>
+                <option value="NL">Dutch</option>
+                <option value="PL">Polish</option>
+                <option value="RO">Romanian</option>
+                <option value="SK">Slovak</option>
+                <option value="SL">Slovenian</option>
+                <option value="SV">Swedish</option>
+                <option value="UK">Ukrainian</option>
+            </optgroup>
+
+            <!-- Portuguese & Spanish -->
+            <optgroup label="Iberian & Latin American">
+                <option value="ES">Spanish</option>
+                <option value="ES-419">Spanish (Latin American)</option>
+                <option value="PT-PT">Portuguese (European)</option>
+                <option value="PT-BR">Portuguese (Brazilian)</option>
+            </optgroup>
+
+            <!-- Slavic Languages -->
+            <optgroup label="Slavic Languages">
+                <option value="RU">Russian</option>
+            </optgroup>
+
+            <!-- Asian Languages -->
+            <optgroup label="Asian Languages">
+                <option value="ZH-HANS">Chinese (Simplified)</option>
+                <option value="ZH-HANT">Chinese (Traditional)</option>
+                <option value="JA">Japanese</option>
+                <option value="KO">Korean</option>
+                <option value="TH">Thai (Next-gen models)</option>
+                <option value="VI">Vietnamese (Next-gen models)</option>
+                <option value="ID">Indonesian</option>
+            </optgroup>
+
+            <!-- Middle Eastern Languages -->
+            <optgroup label="Middle Eastern Languages">
+                <option value="AR">Arabic</option>
+                <option value="HE">Hebrew (Next-gen models)</option>
+                <option value="TR">Turkish</option>
+            </optgroup>
+        </select>
+        <div class="validation-icon" id="language-icon">
+            <i class="ri-check-line text-green-400 hidden" id="language-success"></i>
+            <i class="ri-close-line text-red-400 hidden" id="language-error"></i>
+        </div>
+    </div>
+    <p class="form-hint">Choose your primary language for UniBabel translation services</p>
+    <div id="language-feedback" class="feedback"></div>
+</div>
+<style>
+    /* Form Select Styling - Matching Your Theme */
+    .form-select {
+        background: rgba(55, 65, 81, 0.5); /* Match input field background */
+        border: 1px solid #4B5563; /* Match input field border */
+        color: #ffffff; /* White text */
+        border-radius: 8px;
+        padding: 12px 48px 12px 48px; /* Increased padding to match input fields */
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+    }
+    
+    .form-select:focus {
+        border-color: #dc2626; /* Your primary red */
+        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+    }
+    
+    /* Select Options Styling */
+    .form-select optgroup {
+        font-weight: 600;
+        color: #9ca3af;
+        background: rgba(55, 65, 81, 0.8); /* Match theme background */
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .form-select option {
+        font-weight: 400;
+        color: #ffffff;
+        background: rgba(55, 65, 81, 0.5); /* Match input field background */
+        padding: 8px 12px;
+        border: none;
+    }
+    
+    .form-select option:hover,
+    .form-select option:focus {
+        background: #dc2626 !important; /* Your primary red on hover */
+        color: #ffffff !important;
+    }
+    
+    .form-select option:checked {
+        background: #dc2626 !important;
+        color: #ffffff !important;
+    }
+    
+    .form-select option:selected {
+        background: #dc2626 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Hint Text Styling */
+    .form-hint {
+        font-size: 0.75rem;
+        color: #9ca3af; /* Your gray text color */
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+</style>
+
+<script>
+    // Language selection handler - Shows translation notice in footer
+    document.addEventListener('DOMContentLoaded', () => {
+        const languageSelect = document.getElementById('preferred_language');
+        const feedback = document.getElementById('language-feedback');
+        const successIcon = document.getElementById('language-success');
+        const errorIcon = document.getElementById('language-error');
+        const translationNotice = document.getElementById('translation-notice');
+        
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (e) => {
+                const selectedLang = e.target.value;
+                
+                if (selectedLang) {
+                    // Show success state
+                    languageSelect.classList.remove('invalid');
+                    languageSelect.classList.add('valid');
+                    feedback.textContent = '✓ Language selected';
+                    feedback.className = 'feedback success';
+                    if (successIcon) successIcon.classList.remove('hidden');
+                    if (errorIcon) errorIcon.classList.add('hidden');
+                    
+                    // Show translation notice in footer
+                    if (translationNotice) {
+                        translationNotice.classList.remove('hidden');
+                        
+                        // Auto-hide after 10 seconds
+                        setTimeout(() => {
+                            translationNotice.classList.add('hidden');
+                        }, 10000);
+                    }
+                } else {
+                    // Reset state
+                    languageSelect.classList.remove('valid', 'invalid');
+                    feedback.textContent = '';
+                    feedback.className = 'feedback';
+                    if (successIcon) successIcon.classList.add('hidden');
+                    if (errorIcon) errorIcon.classList.add('hidden');
+                    
+                    // Hide translation notice
+                    if (translationNotice) {
+                        translationNotice.classList.add('hidden');
+                    }
+                }
+            });
+        }
+    });
+</script>

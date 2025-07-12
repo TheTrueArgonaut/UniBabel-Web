@@ -1,0 +1,66 @@
+<div class="mb-2">
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-3 shadow-2xl border border-gray-700/50">
+        <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <i class="ri-heart-line text-primary text-sm"></i>
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-white">
+                    Welcome back!
+                </h2>
+                <p class="text-gray-400 text-xs">Ready to connect?</p>
+            </div>
+        </div>
+
+        <!-- Interactive Stats Grid -->
+        <div class="grid grid-cols-1 gap-1 mb-3">
+            <!-- Active Chats - Clickable Button -->
+            <button onclick="openActiveChats()" class="group">
+                <div class="bg-[#111111] p-2 rounded-xl border border-gray-800 hover:border-blue-500/50 transition-all duration-300 group-hover:scale-105">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                            <i class="ri-chat-3-line text-blue-400 text-xs"></i>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <h3 class="text-xs font-bold text-white">{{ stats.total_chats or 0
+                                }}</h3>
+                            <p class="text-gray-400 text-xs">Active Chats</p>
+                        </div>
+                        <i class="ri-arrow-right-s-line text-gray-400 group-hover:text-blue-400 transition-colors"></i>
+                    </div>
+                </div>
+            </button>
+
+            <!-- Friends - Clickable Button -->
+            <button onclick="openFriendsDrawer()" class="group">
+                <div class="bg-[#111111] p-2 rounded-xl border border-gray-800 hover:border-green-500/50 transition-all duration-300 group-hover:scale-105">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-lg bg-green-500/10 flex items-center justify-center">
+                            <i class="ri-user-3-line text-green-400 text-xs"></i>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <h3 class="text-xs font-bold text-white">{{ stats.friends_count or 0
+                                }}</h3>
+                            <p class="text-gray-400 text-xs">Friends</p>
+                        </div>
+                        <i class="ri-arrow-right-s-line text-gray-400 group-hover:text-green-400 transition-colors"></i>
+                    </div>
+                </div>
+            </button>
+
+            <!-- Days Active - Keep as display only -->
+            <div class="bg-[#111111] p-2 rounded-xl border border-gray-800">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                        <i class="ri-calendar-line text-yellow-400 text-xs"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-white">{{ stats.account_age_days or 0
+                            }}</h3>
+                        <p class="text-gray-400 text-xs">Days Active</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

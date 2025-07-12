@@ -1,0 +1,119 @@
+<!-- Settings Language Component -->
+<section class="settings-card" aria-labelledby="language-heading">
+    <h3 id="language-heading">🌐 Language & Translation</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Preferred Language</h4>
+            <p>Your primary language for conversations</p>
+        </div>
+        <label for="preferredLanguage" class="sr-only">Select your preferred language</label>
+        <select id="preferredLanguage" aria-describedby="language-help">
+            <!-- 🌐 ALL DEEPL PRO API LANGUAGES (Official Codes) -->
+            <!-- Popular Languages First -->
+            <option value="EN" selected>English (All variants)</option>
+            <option value="EN-US">English (American)</option>
+            <option value="EN-GB">English (British)</option>
+            <option value="ES">Spanish (Español)</option>
+            <option value="ES-419">Spanish (Latin American)</option>
+            <option value="FR">French (Français)</option>
+            <option value="DE">German (Deutsch)</option>
+            <option value="IT">Italian (Italiano)</option>
+            <option value="PT">Portuguese (Português)</option>
+            <option value="PT-BR">Portuguese (Brazilian)</option>
+            <option value="PT-PT">Portuguese (European)</option>
+            <option value="RU">Russian (Русский)</option>
+            <option value="JA">Japanese (日本語)</option>
+            <option value="KO">Korean (한국어)</option>
+            <option value="ZH">Chinese (中文)</option>
+            <option value="ZH-HANS">Chinese (Simplified) 简体中文</option>
+            <option value="ZH-HANT">Chinese (Traditional) 繁體中文</option>
+
+            <!-- European Languages -->
+            <optgroup label="🇪🇺 European Languages">
+                <option value="AR">Arabic (العربية)</option>
+                <option value="BG">Bulgarian (Български)</option>
+                <option value="CS">Czech (Čeština)</option>
+                <option value="DA">Danish (Dansk)</option>
+                <option value="NL">Dutch (Nederlands)</option>
+                <option value="ET">Estonian (Eesti)</option>
+                <option value="FI">Finnish (Suomi)</option>
+                <option value="EL">Greek (Ελληνικά)</option>
+                <option value="HU">Hungarian (Magyar)</option>
+                <option value="LV">Latvian (Latviešu)</option>
+                <option value="LT">Lithuanian (Lietuvių)</option>
+                <option value="NB">Norwegian Bokmål (Norsk bokmål)</option>
+                <option value="PL">Polish (Polski)</option>
+                <option value="RO">Romanian (Română)</option>
+                <option value="SK">Slovak (Slovenčina)</option>
+                <option value="SL">Slovenian (Slovenščina)</option>
+                <option value="SV">Swedish (Svenska)</option>
+                <option value="TR">Turkish (Türkçe)</option>
+                <option value="UK">Ukrainian (Українська)</option>
+            </optgroup>
+
+            <!-- Asian & Other Languages -->
+            <optgroup label="🌏 Asian & Other Languages">
+                <option value="ID">Indonesian (Bahasa Indonesia)</option>
+            </optgroup>
+
+            <!-- Next-Generation Models (Latest DeepL Tech) -->
+            <optgroup label="✨ Next-Generation Models">
+                <option value="HE">Hebrew (עברית) 🚀 Next-Gen</option>
+                <option value="TH">Thai (ไทย) 🚀 Next-Gen</option>
+                <option value="VI">Vietnamese (Tiếng Việt) 🚀 Next-Gen</option>
+            </optgroup>
+
+            <!-- DeepL Write Support (Text Improvement) -->
+            <optgroup label="📝 Advanced Writing Support">
+                <option value="DE">✏️ German (with DeepL Write)</option>
+                <option value="EN-GB">✏️ British English (with DeepL Write)</option>
+                <option value="EN-US">✏️ American English (with DeepL Write)</option>
+                <option value="ES">✏️ Spanish (with DeepL Write)</option>
+                <option value="FR">✏️ French (with DeepL Write)</option>
+                <option value="IT">✏️ Italian (with DeepL Write)</option>
+                <option value="PT-BR">✏️ Brazilian Portuguese (with DeepL Write)</option>
+                <option value="PT-PT">✏️ European Portuguese (with DeepL Write)</option>
+            </optgroup>
+        </select>
+        <div id="language-help" class="sr-only">Messages you type will be automatically translated
+            from this language. Uses official DeepL Pro API with support for 35+ languages including
+            next-generation models and advanced writing features.
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Auto-Translate Messages</h4>
+            <p>Automatically translate incoming messages to your language<br>
+                <small style="color: #9ca3af;">⚠️ When OFF: You'll see messages in their original
+                    language. Perfect for polyglots and language learners!</small>
+            </p>
+        </div>
+        <label class="switch" for="autoTranslate">
+            <input type="checkbox" id="autoTranslate" checked
+                   aria-describedby="auto-translate-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="auto-translate-help" class="sr-only">When enabled, automatically translates
+            messages from other languages to your preferred language. When disabled, you'll see
+            original messages in their native language - great for polyglots, language learners, and
+            cultural enthusiasts.
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Show Original Text</h4>
+            <p>Display the original message alongside translations<br>
+                <small style="color: #9ca3af;">💡 Only applies when Auto-Translate is ON</small></p>
+        </div>
+        <label class="switch" for="showOriginal">
+            <input type="checkbox" id="showOriginal" checked aria-describedby="original-text-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="original-text-help" class="sr-only">Show both the original message and the
+            translated version side by side. Only applies when auto-translate is enabled.
+        </div>
+    </div>
+</section>

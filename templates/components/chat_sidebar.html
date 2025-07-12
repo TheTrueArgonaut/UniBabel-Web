@@ -1,0 +1,162 @@
+<nav class="w-80 bg-secondary border-r border-gray-700 flex flex-col"
+     aria-label="Chat conversations" role="navigation">
+
+    <!-- Header -->
+    <div class="p-4 border-b border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+            <a href="/dashboard"
+               class="text-xl font-bold babel-logo hover:opacity-80 transition-opacity">
+                UniBabel
+            </a>
+            <div class="flex items-center space-x-2">
+                <a href="/premium"
+                   class="w-8 h-8 bg-yellow-600 hover:bg-yellow-500 rounded-full flex items-center justify-center transition-colors focus:ring-2"
+                   aria-label="Upgrade to Premium"
+                   title="Upgrade to Premium">
+                    <i class="ri-vip-crown-line text-white text-sm" aria-hidden="true"></i>
+                </a>
+                <a href="/settings"
+                   class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors focus:ring-2"
+                   aria-label="Open settings"
+                   title="Open settings">
+                    <i class="ri-settings-3-line text-gray-300" aria-hidden="true"></i>
+                </a>
+                <button onclick="showCreateRoomModal()"
+                        class="w-8 h-8 bg-primary hover:bg-red-700 rounded-full flex items-center justify-center transition-colors focus:ring-2"
+                        aria-label="Create or join room"
+                        title="Create or join room">
+                    <i class="ri-add-line text-white" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="relative">
+            <label for="searchInput" class="sr-only">Search conversations</label>
+            <input type="text"
+                   id="searchInput"
+                   placeholder="Search conversations..."
+                   class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
+                   aria-describedby="search-help">
+            <i class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+               aria-hidden="true"></i>
+            <div id="search-help" class="sr-only">Type to search through your conversations</div>
+        </div>
+    </div>
+
+    <!-- Chat List -->
+    <div class="flex-1 overflow-y-auto chat-scroll"
+         role="list"
+         aria-label="Chat conversations list">
+
+        <!-- Room Categories (Discord Style) -->
+        <div id="chatList" aria-live="polite">
+
+            <!-- Friends Section -->
+            <div class="room-category">
+                <div class="category-header" onclick="toggleCategory('friends')">
+                    <i class="ri-arrow-down-s-line category-arrow" id="friends-arrow"></i>
+                    <span class="category-title">👥 FRIENDS</span>
+                    <span class="category-count" id="friends-count">0</span>
+                </div>
+                <div class="category-content" id="friends-content">
+                    <div id="friends-list"></div>
+                    <div class="empty-category" id="friends-empty">
+                        <p>No friend conversations yet</p>
+                        <small>Add friends to start chatting!</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friend Groups Section -->
+            <div class="room-category">
+                <div class="category-header" onclick="toggleCategory('groups')">
+                    <i class="ri-arrow-down-s-line category-arrow" id="groups-arrow"></i>
+                    <span class="category-title">🔗 GROUPS</span>
+                    <span class="category-count" id="groups-count">0</span>
+                </div>
+                <div class="category-content" id="groups-content">
+                    <div id="groups-list"></div>
+                    <div class="empty-category" id="groups-empty">
+                        <p>No friend groups yet</p>
+                        <small>Create groups in the Babel feed!</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Public Rooms Section -->
+            <div class="room-category">
+                <div class="category-header" onclick="toggleCategory('public')">
+                    <i class="ri-arrow-down-s-line category-arrow" id="public-arrow"></i>
+                    <span class="category-title">🌍 PUBLIC ROOMS</span>
+                    <span class="category-count" id="public-count">0</span>
+                </div>
+                <div class="category-content" id="public-content">
+                    <div id="public-list"></div>
+                    <div class="empty-category" id="public-empty">
+                        <p>No public rooms joined</p>
+                        <small>Browse rooms to find communities!</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Private Rooms Section -->
+            <div class="room-category">
+                <div class="category-header" onclick="toggleCategory('private')">
+                    <i class="ri-arrow-down-s-line category-arrow" id="private-arrow"></i>
+                    <span class="category-title">🔒 MY ROOMS</span>
+                    <span class="category-count" id="private-count">0</span>
+                </div>
+                <div class="category-content" id="private-content">
+                    <div id="private-list"></div>
+                    <div class="empty-category" id="private-empty">
+                        <p>No private rooms yet</p>
+                        <small>Click + to create your first room!</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="p-4 border-t border-gray-700">
+        <div class="flex items-center space-x-3" role="banner"
+             aria-label="Current user profile">
+            <div class="w-10 h-10 user-avatar rounded-full flex items-center justify-center text-white font-semibold"
+                 aria-hidden="true">
+                {{ current_user.display_name[0] if current_user.display_name else
+                current_user.username[0] }}
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-white truncate">{{ current_user.display_name or
+                    current_user.username }}</h3>
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-green-500 rounded-full"
+                         aria-label="Online status"
+                         title="You are online"></div>
+                    <span class="text-xs text-gray-400">{{ current_user.preferred_language.upper() }}</span>
+                </div>
+            </div>
+            <div class="flex space-x-1">
+                <a href="/settings"
+                   class="text-gray-400 hover:text-white focus:ring-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+                   aria-label="Open settings"
+                   title="Settings">
+                    <i class="ri-settings-3-line" aria-hidden="true"></i>
+                </a>
+                <a href="/rooms"
+                   class="text-gray-400 hover:text-white focus:ring-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+                   aria-label="Browse rooms"
+                   title="Browse rooms">
+                    <i class="ri-door-open-line" aria-hidden="true"></i>
+                </a>
+                <button class="text-gray-400 hover:text-white focus:ring-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+                        aria-label="Open user menu"
+                        title="Open user menu">
+                    <i class="ri-more-2-line" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>

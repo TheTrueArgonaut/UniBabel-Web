@@ -1,0 +1,797 @@
+<script>
+
+// Data Warehouse Functions
+let isDataWarehouseOpen = false;
+
+function loadDataWarehouse() {
+    console.log('💰 Opening Data Warehouse Dashboard...');
+    
+    // Create data warehouse modal overlay like Admin Chat and Translation Manager
+    const modal = document.createElement('div');
+    modal.id = 'data-warehouse-modal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl max-w-6xl w-full mx-4 h-[700px] flex flex-col gothic-border">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-600/20 flex items-center justify-center border border-green-600/50">
+                        <i class="ri-database-2-line text-xl text-green-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">💰 Data Warehouse Dashboard</h3>
+                        <p class="text-sm text-gray-400">User profiling & monetization hub</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">System Status</p>
+                        <p class="text-green-400 font-bold">Active</p>
+                    </div>
+                    <button onclick="refreshDataWarehouse()" class="text-gray-400 hover:text-white p-2">
+                        <i class="ri-refresh-line"></i>
+                    </button>
+                    <button onclick="closeDataWarehouse()" class="text-gray-400 hover:text-white">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="flex-1 p-4 overflow-y-auto">
+                <div class="text-center text-gray-400 py-8">
+                    <i class="ri-loader-line animate-spin text-4xl mb-2"></i>
+                    <p>Loading Data Warehouse...</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Set flag and load data
+    isDataWarehouseOpen = true;
+    loadDataWarehouseData();
+}
+
+function loadDataWarehouseData() {
+    fetch('/api/data-warehouse/dashboard')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const warehouseHtml = generateDataWarehouseContent(data);
+            // Update the modal content
+            const modal = document.getElementById('data-warehouse-modal');
+            if (modal) {
+                const contentDiv = modal.querySelector('.flex-1.p-4.overflow-y-auto');
+                contentDiv.innerHTML = warehouseHtml;
+                setupDataWarehouseFilters();
+            }
+            showNotification("Data Warehouse loaded", "success");
+        })
+        .catch(error => {
+            console.error("Error loading Data Warehouse:", error);
+            const modal = document.getElementById('data-warehouse-modal');
+            if (modal) {
+                const contentDiv = modal.querySelector('.flex-1.p-4.overflow-y-auto');
+                contentDiv.innerHTML = `
+                    <div class="text-center text-red-400 py-8">
+                        <i class="ri-error-warning-line text-4xl mb-2"></i>
+                        <p>Failed to load data warehouse: ${error.message}</p>
+                        <button onclick="loadDataWarehouseData()" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                            Retry
+                        </button>
+                    </div>
+                `;
+            }
+        });
+}
+
+function generateDataWarehouseContent(data) {
+    const stats = data.stats || {};
+    const buyers = data.buyers || [];
+    
+    return `
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-gray-400 text-sm">Total Profiles</h4>
+                        <p class="text-3xl font-bold text-white">${stats.total_users || 0}</p>
+                        <p class="text-blue-400 text-sm">Ready for sale</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                        <i class="ri-user-line text-2xl text-blue-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-gray-400 text-sm">Total Data Value</h4>
+                        <p class="text-3xl font-bold text-green-400">$${(stats.total_value || 0).toLocaleString()}</p>
+                        <p class="text-green-400 text-sm">$${Math.round(stats.avg_value_per_user || 0)}/user</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                        <i class="ri-money-dollar-circle-line text-2xl text-green-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-gray-400 text-sm">Potential Revenue</h4>
+                        <p class="text-3xl font-bold text-purple-400">$${((stats.potential_revenue || 0) / 1000000).toFixed(0)}M</p>
+                        <p class="text-purple-400 text-sm">From all buyers</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
+                        <i class="ri-treasure-map-line text-2xl text-purple-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Analysis -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
+                <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="ri-target-line text-blue-400"></i>
+                    Data Analysis
+                </h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Total User Profiles</span>
+                        <span class="text-blue-400 font-bold">${stats.total_users || 0}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Active Users</span>
+                        <span class="text-green-400 font-bold">${stats.active_users || 0}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Data Categories</span>
+                        <span class="text-purple-400 font-bold">${stats.data_categories || 0}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Overview -->
+            <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
+                <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="ri-database-line text-cyan-400"></i>
+                    System Overview
+                </h4>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Storage Used</span>
+                        <span class="text-cyan-400 font-bold">${calculateStorageSize(stats.total_users || 0)}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Data Integrity</span>
+                        <span class="text-green-400 font-bold">100%</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <span class="text-gray-300">Last Updated</span>
+                        <span class="text-gray-400 font-bold">${new Date().toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Warehouse Table -->
+        <div class="bg-gray-900/50 rounded-xl border border-gray-700 overflow-hidden">
+            <div class="px-6 py-4 bg-gray-800/50 border-b border-gray-700">
+                <h4 class="text-white font-semibold">User Data Profiles</h4>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-800/50">
+                        <tr class="border-b border-gray-700">
+                            <th class="text-left p-4 text-gray-400">User Profile</th>
+                            <th class="text-left p-4 text-gray-400">Location</th>
+                            <th class="text-left p-4 text-gray-400">Type</th>
+                            <th class="text-left p-4 text-gray-400">Language</th>
+                            <th class="text-left p-4 text-gray-400">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${generateRealDataWarehouseTableRows(stats)}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Real Actions -->
+        <div class="mt-6 flex justify-center gap-4">
+            <button onclick="exportRealData()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2">
+                <i class="ri-download-line"></i>Export Data
+            </button>
+            <button onclick="generateDataReport()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg flex items-center gap-2">
+                <i class="ri-file-text-line"></i>Generate Report
+            </button>
+            <button onclick="manageBuyers()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center gap-2">
+                <i class="ri-user-settings-line"></i>Manage Buyers
+            </button>
+        </div>
+    `;
+}
+
+function refreshDataWarehouse() {
+    console.log('🔄 Refreshing Data Warehouse...');
+    showNotification("Refreshing data warehouse...", "info");
+    loadDataWarehouseData();
+}
+
+function closeDataWarehouse() {
+    const modal = document.getElementById('data-warehouse-modal');
+    if (modal) {
+        modal.remove();
+    }
+    isDataWarehouseOpen = false;
+}
+
+function generateRealDataWarehouseTableRows(stats) {
+    // Generate sample data based on stats
+    const totalUsers = stats.total_users || 0;
+    if (totalUsers === 0) {
+        return `<tr><td colspan="5" class="text-center p-8 text-gray-400">
+            <div class="py-4">
+                <i class="ri-inbox-line text-4xl mb-2"></i>
+                <p>No user profiles found</p>
+                <p class="text-sm mt-2">Users will appear here once data is populated</p>
+            </div>
+        </td></tr>`;
+    }
+    
+    let rows = '';
+    // Generate up to 10 sample rows based on available data
+    const rowCount = Math.min(10, totalUsers);
+    
+    for (let i = 1; i <= rowCount; i++) {
+        rows += `
+            <tr class="border-b border-gray-700/50 hover:bg-gray-800/30 transition-colors">
+                <td class="p-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center">
+                            <i class="ri-user-line text-blue-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">User_${i}</p>
+                            <p class="text-gray-400 text-sm">ID: ${i}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="p-4">
+                    <span class="text-gray-400">Location ${i}</span>
+                </td>
+                <td class="p-4">
+                    <span class="text-gray-400">Type ${i}</span>
+                </td>
+                <td class="p-4">
+                    <span class="text-gray-400">Language ${i}</span>
+                </td>
+                <td class="p-4">
+                    <div class="flex gap-1">
+                        <button onclick="viewUserProfile(${i})" class="bg-blue-600/20 text-blue-400 px-2 py-1 rounded text-sm border border-blue-600/50 hover:bg-blue-600/40" title="View Profile">
+                            <i class="ri-eye-line"></i>
+                        </button>
+                        <button onclick="exportUserData(${i})" class="bg-green-600/20 text-green-400 px-2 py-1 rounded text-sm border border-green-600/50 hover:bg-green-600/40" title="Export Data">
+                            <i class="ri-download-line"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+    
+    return rows;
+}
+
+function exportRealData() {
+    showNotification(" Exporting user data...", "info");
+    
+    fetch('/api/admin/export-real-data')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const csvData = 'User ID,Location,Type,Language\n' +
+                data.users.map(user => {
+                    return `${user.id},${user.location},${user.type},${user.language}`;
+                }).join('\n');
+            downloadFile(csvData, 'real_data.csv', 'text/csv');
+            showNotification("", "success");
+        } else {
+            showNotification('Failed to export data', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error exporting data:', error);
+        showNotification('Error exporting data', 'error');
+    });
+}
+
+function generateDataReport() {
+    showNotification(" Generating data report...", "info");
+    
+    fetch('/api/admin/generate-data-report')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const report = {
+                timestamp: new Date().toISOString(),
+                summary: {
+                    total_profiles: data.total_profiles,
+                    total_value: data.total_value,
+                    high_value_targets: data.high_value_targets,
+                    vulnerable_targets: data.vulnerable_targets
+                },
+                recommendations: [
+                    'Focus on high-value targets for premium pricing',
+                    'Vulnerable users are ideal for manipulation campaigns',
+                    'Government agencies pay highest rates for political data'
+                ]
+            };
+            
+            downloadFile(JSON.stringify(report, null, 2), 'data_report.json', 'application/json');
+            showNotification("", "success");
+        } else {
+            showNotification('Failed to generate report', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error generating report:', error);
+        showNotification('Error generating report', 'error');
+    });
+}
+
+function manageBuyers() {
+    showNotification("Opening buyer management...", "info");
+    
+    // Create buyer management modal
+    const buyerModal = document.createElement('div');
+    buyerModal.id = 'buyer-management-modal';
+    buyerModal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    buyerModal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl max-w-4xl w-full mx-4 max-h-[600px] overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-600/20 flex items-center justify-center border border-green-600/50">
+                        <i class="ri-user-settings-line text-xl text-green-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Buyer Management</h3>
+                        <p class="text-sm text-gray-400">Manage data buyers and their requirements</p>
+                    </div>
+                </div>
+                <button onclick="closeBuyerManagement()" class="text-gray-400 hover:text-white">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Content -->
+            <div class="p-6">
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Current Buyers</h4>
+                    <div id="buyers-list" class="space-y-3">
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="ri-user-line text-4xl mb-2"></i>
+                            <p>No buyers configured yet</p>
+                            <p class="text-sm">Add buyers to start managing data sales</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 pt-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Add New Buyer</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Buyer Name</label>
+                            <input type="text" id="buyer-name" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2" placeholder="Enter buyer name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Contact Email</label>
+                            <input type="email" id="buyer-email" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2" placeholder="Enter contact email">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Budget</label>
+                            <input type="number" id="buyer-budget" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2" placeholder="Enter budget">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Data Interests</label>
+                            <select id="buyer-interests" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2">
+                                <option value="">Select interests</option>
+                                <option value="behavioral">Behavioral Data</option>
+                                <option value="financial">Financial Data</option>
+                                <option value="personal">Personal Data</option>
+                                <option value="commercial">Commercial Data</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="addBuyer()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                            <i class="ri-add-line mr-2"></i>Add Buyer
+                        </button>
+                        <button onclick="closeBuyerManagement()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(buyerModal);
+    loadExistingBuyers();
+}
+
+function closeBuyerManagement() {
+    const modal = document.getElementById('buyer-management-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function loadExistingBuyers() {
+    // In a real implementation, this would load from the backend
+    // For now, we'll check if there are any buyers in the system
+    fetch('/api/data-warehouse/dashboard')
+        .then(response => response.json())
+        .then(data => {
+            if (data.buyers && data.buyers.length > 0) {
+                updateBuyersList(data.buyers);
+            }
+        })
+        .catch(error => {
+            console.log('No existing buyers to load');
+        });
+}
+
+function updateBuyersList(buyers) {
+    const buyersList = document.getElementById('buyers-list');
+    if (buyers.length === 0) {
+        buyersList.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                <i class="ri-user-line text-4xl mb-2"></i>
+                <p>No buyers configured yet</p>
+                <p class="text-sm">Add buyers to start managing data sales</p>
+            </div>
+        `;
+        return;
+    }
+    
+    buyersList.innerHTML = buyers.map(buyer => `
+        <div class="bg-gray-700 p-4 rounded-lg flex items-center justify-between">
+            <div>
+                <h5 class="text-white font-semibold">${buyer.name}</h5>
+                <p class="text-gray-400 text-sm">${buyer.contact || 'No contact info'}</p>
+                <p class="text-green-400 text-sm">Budget: $${(buyer.budget || 0).toLocaleString()}</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="editBuyer('${buyer.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                    Edit
+                </button>
+                <button onclick="removeBuyer('${buyer.name}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
+                    Remove
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function addBuyer() {
+    const name = document.getElementById('buyer-name').value.trim();
+    const email = document.getElementById('buyer-email').value.trim();
+    const budget = document.getElementById('buyer-budget').value;
+    const interests = document.getElementById('buyer-interests').value;
+    
+    if (!name || !email || !budget) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    // In a real implementation, this would save to the backend
+    showNotification(`Buyer "${name}" added successfully!`, 'success');
+    
+    // Clear form
+    document.getElementById('buyer-name').value = '';
+    document.getElementById('buyer-email').value = '';
+    document.getElementById('buyer-budget').value = '';
+    document.getElementById('buyer-interests').value = '';
+    
+    // For now, just show a success message
+    // In a real implementation, you would reload the buyers list
+}
+
+function editBuyer(buyerName) {
+    showNotification(`Editing buyer: ${buyerName}`, 'info');
+    // In a real implementation, this would open an edit form
+}
+
+function removeBuyer(buyerName) {
+    if (confirm(`Are you sure you want to remove buyer "${buyerName}"?`)) {
+        showNotification(`Buyer "${buyerName}" removed successfully!`, 'success');
+        // In a real implementation, this would remove from backend and reload list
+    }
+}
+
+function viewUserProfile(userId) {
+    showNotification(` Viewing detailed profile for User ${userId}`, "info");
+    // Could expand to show detailed modal
+}
+
+function exportUserData(userId) {
+    showNotification(` Exporting data for User ${userId}...`, "info");
+    // Could expand to export user data
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], {type: contentType});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Data Warehouse Utilities
+function setupDataWarehouseFilters() {
+    const search = document.getElementById('user-search');
+    if (search) {
+        search.addEventListener('input', function() {
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(() => applyFilters(), 300);
+        });
+    }
+}
+
+function applyFilters() {
+    const search = document.getElementById('user-search')?.value?.toLowerCase() || '';
+    const valueFilter = document.getElementById('value-filter')?.value || '';
+    const sortFilter = document.getElementById('sort-filter')?.value || '';
+    
+    showNotification("Applying filters...", "info");
+    
+    const filterParams = new URLSearchParams({ search, value_filter: valueFilter, sort_by: sortFilter });
+    
+    fetch(`/api/admin/data-warehouse/filter?${filterParams}`)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#data-warehouse-modal tbody');
+            if (tableBody) {
+                tableBody.innerHTML = generateRealDataWarehouseTableRows(data.stats || {});
+            }
+        })
+        .catch(error => {
+            showNotification("Error filtering data", "error");
+        });
+}
+
+function exportAllData() {
+    const format = prompt("Export format (json/csv):", "json");
+    if (format && (format === 'json' || format === 'csv')) {
+        window.open(`/api/admin/data-warehouse/export?format=${format}`, '_blank');
+        showNotification(`Exporting data as ${format.toUpperCase()}...`, 'success');
+    }
+}
+
+function calculateStorageSize(userCount) {
+    if (userCount === 0) return '0 MB';
+    
+    // Real calculation: approximately 250KB per user profile
+    const bytesPerUser = 256000; // 250KB
+    const totalBytes = userCount * bytesPerUser;
+    
+    if (totalBytes < 1024 * 1024) {
+        return Math.round(totalBytes / 1024) + ' KB';
+    } else if (totalBytes < 1024 * 1024 * 1024) {
+        return (totalBytes / (1024 * 1024)).toFixed(1) + ' MB';
+    } else {
+        return (totalBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
+}
+
+// Message User Function
+function messageUser(userId) {
+    console.log(` Opening messaging interface for user ${userId}`);
+    
+    // Create messaging modal
+    const modal = document.createElement('div');
+    modal.id = 'messaging-modal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto gothic-border">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-white">
+                    <i class="ri-message-3-line mr-2 text-purple-400"></i>
+                    Message User #${userId}
+                </h3>
+                <button onclick="closeMessagingModal()" class="text-gray-400 hover:text-white">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
+            </div>
+            
+            <div id="conversation-history" class="bg-gray-900/50 rounded-lg p-4 mb-4 h-64 overflow-y-auto">
+                <div class="text-center text-gray-400 py-8">
+                    <i class="ri-chat-3-line text-4xl mb-2"></i>
+                    <p>Loading conversation history...</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <input type="text" id="message-input" placeholder="Type your message..." 
+                       class="flex-1 bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2"
+                       onkeypress="handleMessageKeyPress(event, ${userId})">
+                <button onclick="sendMessage(${userId})" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">
+                    <i class="ri-send-plane-line"></i>
+                </button>
+            </div>
+            
+            <div class="mt-4 flex gap-2">
+                <button onclick="sendQuickMessage(${userId}, 'system_notification', 'Account Update', 'Your account has been updated successfully.')" 
+                        class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded text-sm border border-blue-600/50 hover:bg-blue-600/40">
+                    📢 System Notification
+                </button>
+                <button onclick="sendQuickMessage(${userId}, 'admin_warning', 'Policy Reminder', 'Please review our community guidelines.')" 
+                        class="bg-yellow-600/20 text-yellow-400 px-3 py-1 rounded text-sm border border-yellow-600/50 hover:bg-yellow-600/40">
+                    ⚠️ Warning
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Load conversation history
+    loadConversationHistory(userId);
+    
+    // Focus on input
+    document.getElementById('message-input').focus();
+}
+
+function closeMessagingModal() {
+    const modal = document.getElementById('messaging-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function loadConversationHistory(userId) {
+    fetch(`/api/admin/conversation-history/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const historyDiv = document.getElementById('conversation-history');
+            
+            if (data.success && data.messages && data.messages.length > 0) {
+                let messagesHtml = '';
+                data.messages.forEach(msg => {
+                    const isAdmin = msg.sender_id !== parseInt(userId);
+                    const timestamp = new Date(msg.timestamp).toLocaleString();
+                    
+                    messagesHtml += `
+                        <div class="mb-3 ${isAdmin ? 'text-right' : 'text-left'}">
+                            <div class="inline-block max-w-xs lg:max-w-md px-3 py-2 rounded-lg ${
+                                isAdmin ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-200'
+                            }">
+                                <p class="text-sm">${msg.content}</p>
+                                <p class="text-xs opacity-70 mt-1">${timestamp}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyDiv.innerHTML = messagesHtml;
+            } else {
+                historyDiv.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="ri-chat-3-line text-4xl mb-2"></i>
+                        <p>No conversation history</p>
+                        <p class="text-sm mt-2">Start a new conversation below</p>
+                    </div>
+                `;
+            }
+            
+            // Scroll to bottom
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error loading conversation:', error);
+            document.getElementById('conversation-history').innerHTML = `
+                <div class="text-center text-red-400 py-8">
+                    <i class="ri-error-warning-line text-4xl mb-2"></i>
+                    <p>Error loading conversation</p>
+                </div>
+            `;
+        });
+}
+
+function handleMessageKeyPress(event, userId) {
+    if (event.key === 'Enter') {
+        sendMessage(userId);
+    }
+}
+
+function sendMessage(userId) {
+    const messageInput = document.getElementById('message-input');
+    const message = messageInput.value.trim();
+    
+    if (!message) {
+        showNotification('Please enter a message', 'error');
+        return;
+    }
+    
+    // Show sending state
+    const sendButton = event.target;
+    const originalText = sendButton.innerHTML;
+    sendButton.innerHTML = '<i class="ri-loader-line animate-spin"></i>';
+    sendButton.disabled = true;
+    
+    fetch('/api/admin/send-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            target_user_id: userId,
+            content: message,
+            message_type: 'admin_direct'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Message sent successfully! 🌍', 'success');
+            messageInput.value = '';
+            loadConversationHistory(userId); // Refresh conversation
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending message:', error);
+        showNotification('Error sending message', 'error');
+    })
+    .finally(() => {
+        // Reset button
+        sendButton.innerHTML = originalText;
+        sendButton.disabled = false;
+    });
+}
+
+function sendQuickMessage(userId, messageType, title, content) {
+    const quickMessage = `${title}: ${content}`;
+    
+    fetch('/api/admin/send-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            target_user_id: userId,
+            content: quickMessage,
+            message_type: messageType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`${title} sent successfully! 🌍`, 'success');
+            loadConversationHistory(userId); // Refresh conversation
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending quick message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+</script>

@@ -1,0 +1,28 @@
+<!-- 🎯 BIRTHDATE VERIFICATION MICROSERVICE - Single Responsibility: Birth date input & age warnings -->
+<div id="birthdate-verification" class="verification-method active">
+    <div class="form-group">
+        <label class="form-label">Birth Date</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-calendar-line"></i>
+            </div>
+            <input type="date"
+                   id="birth_date"
+                   name="birth_date"
+                   required
+                   class="form-input"
+                   max="2024-12-31"/>
+            <div class="validation-icon" id="birthdate-icon">
+                <i class="ri-check-line text-green-400 hidden" id="birthdate-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="birthdate-error"></i>
+            </div>
+        </div>
+        <div id="age-info" class="feedback"></div>
+    </div>
+
+    <!-- AGE WARNING MICROSERVICE -->
+    {% include 'components/age_warning.html' %}
+
+    <!-- MINOR NOTICE MICROSERVICE -->
+    {% include 'components/minor_notice.html' %}
+</div>

@@ -1,0 +1,118 @@
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#dc2626",
+                    secondary: "#1a1a1a",
+                    dark: "#0a0a0a",
+                    accent: "#374151"
+                },
+                fontFamily: {
+                    'poppins': ['Poppins', 'sans-serif']
+                }
+            }
+        }
+    };
+</script>
+<style>
+    :where([class^="ri-"])::before { content: "\f3c2"; }
+    .chat-scroll::-webkit-scrollbar { width: 4px; }
+    .chat-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
+    .chat-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+    .chat-scroll::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    
+    .message-sent { 
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        border-radius: 18px 18px 4px 18px;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    .message-received { 
+        background: #1f2937;
+        border-radius: 18px 18px 18px 4px;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    .typing-dots { animation: typing 1.4s infinite; }
+    @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-10px); }
+    }
+    
+    .translation-badge {
+        background: linear-gradient(45deg, #059669, #10b981);
+        animation: pulse 2s infinite;
+    }
+    
+    .user-avatar { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+    .online-indicator { background: #10b981; box-shadow: 0 0 0 2px #0a0a0a; }
+    .babel-logo {
+        background: linear-gradient(135deg, #dc2626, #f59e0b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* ADA COMPLIANCE STYLES */
+    .sr-only {
+        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    
+    .focus\:ring-2:focus { outline: 2px solid #dc2626; outline-offset: 2px; }
+    
+    @media (prefers-contrast: high) {
+        .message-sent { background: #ffffff; color: #000000; border: 2px solid #000000; }
+        .message-received { background: #000000; color: #ffffff; border: 2px solid #ffffff; }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        .typing-dots { animation: none; }
+        .translation-badge { animation: none; }
+    }
+    
+    button:focus, input:focus, [tabindex]:focus { outline: 2px solid #dc2626; outline-offset: 2px; }
+    
+    .skip-link {
+        position: absolute; top: -40px; left: 6px; background: #dc2626; color: white;
+        padding: 8px; text-decoration: none; border-radius: 4px; z-index: 1000;
+    }
+    .skip-link:focus { top: 6px; }
+    
+    /* Room category styles */
+    .room-category { margin-bottom: 8px; }
+    .category-header {
+        display: flex; align-items: center; padding: 8px 12px; cursor: pointer;
+        color: #9CA3AF; font-size: 12px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 0.5px; transition: color 0.2s;
+    }
+    .category-header:hover { color: #D1D5DB; }
+    .category-arrow { font-size: 16px; margin-right: 4px; transition: transform 0.2s; }
+    .category-arrow.collapsed { transform: rotate(-90deg); }
+    .category-count {
+        margin-left: auto; background: #374151; padding: 2px 6px;
+        border-radius: 10px; font-size: 11px;
+    }
+    .category-content { padding-left: 8px; }
+    .category-content.hidden { display: none; }
+    .room-item {
+        display: flex; align-items: center; padding: 8px 12px; margin: 2px 0;
+        border-radius: 4px; cursor: pointer; color: #9CA3AF; transition: all 0.2s;
+    }
+    .room-item:hover { background: #374151; color: #F3F4F6; }
+    .room-item.active { background: #4B5563; color: white; }
+    .room-icon { margin-right: 8px; font-size: 16px; }
+    .room-name { flex: 1; font-size: 14px; }
+    .room-status { font-size: 10px; color: #6B7280; }
+    .empty-category {
+        text-align: center; padding: 20px 12px; color: #6B7280; font-size: 12px;
+    }
+    .empty-category p { margin: 0 0 4px 0; }
+    .empty-category small { color: #4B5563; }
+</style>

@@ -1,0 +1,57 @@
+<div class="bg-gray-800/50 border-b border-gray-700 sticky top-20 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="ri-search-line text-gray-400 text-lg"></i>
+            </div>
+            <input
+                    type="text"
+                    id="globalSearchInput"
+                    class="block w-full pl-10 pr-12 py-2 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300"
+                    placeholder="Search chats, friends, rooms, topics... anything!"
+                    autocomplete="off"
+                    onkeyup="performGlobalSearch()"
+                    onfocus="showSearchSuggestions()"
+            >
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div class="flex items-center gap-1">
+                    <kbd class="px-2 py-1 text-xs font-semibold text-gray-400 bg-gray-700 border border-gray-600 rounded">⌘K</kbd>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div id="searchResults"
+             class="absolute top-full left-4 right-4 mt-1 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl hidden z-50 max-h-96 overflow-y-auto">
+            <!-- Quick Suggestions -->
+            <div id="searchSuggestions" class="p-3 border-b border-gray-700">
+                <p class="text-xs font-semibold text-gray-400 mb-2">QUICK SEARCH</p>
+                <div class="flex flex-wrap gap-2">
+                    <button class="quick-search-btn" onclick="searchFor('friends online')">👥 Friends
+                        Online
+                    </button>
+                    <button class="quick-search-btn" onclick="searchFor('trending rooms')">🔥
+                        Trending Rooms
+                    </button>
+                    <button class="quick-search-btn" onclick="searchFor('language exchange')">🌍
+                        Language Exchange
+                    </button>
+                    <button class="quick-search-btn" onclick="searchFor('gaming')">🎮 Gaming</button>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div id="searchResultsList" class="hidden">
+                <!-- Results will be populated here -->
+            </div>
+
+            <!-- No Results -->
+            <div id="searchNoResults" class="hidden p-4 text-center">
+                <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="ri-search-line text-gray-400"></i>
+                </div>
+                <p class="text-gray-400 text-sm">No results found</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<!-- 🎨 BABEL CORE STYLES MICROSERVICE -->
+<!-- SRIMI Compliant: Single Responsibility - Core layout & theme -->
+<style>
+    /* Core Layout */
+    .babel-container { 
+        flex: 1;
+        max-width: none;
+        margin: 0;
+        padding: 20px; 
+        background: #1a1a1a; 
+        min-height: 100vh; 
+        color: white;
+    }
+    
+    .main-layout {
+        display: flex;
+        min-height: calc(100vh - 70px);
+    }
+    
+    /* Core Theme Colors */
+    :root {
+        --primary-color: #ff4757;
+        --secondary-color: #ff6b7a;
+        --background-dark: #1a1a1a;
+        --background-card: #2d2d2d;
+        --border-color: #404040;
+        --text-primary: white;
+        --text-secondary: #999;
+        --premium-gold: #ffd700;
+        --premium-gold-hover: #ffed4e;
+    }
+    
+    /* Error States */
+    .error-message {
+        background: rgba(255, 71, 87, 0.1);
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        text-align: center;
+    }
+    
+    /* Loading States */
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-secondary);
+    }
+    
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .babel-container { padding: 10px; }
+        .main-layout { flex-direction: column; }
+    }
+</style>

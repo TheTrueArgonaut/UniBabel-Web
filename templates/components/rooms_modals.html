@@ -1,0 +1,80 @@
+<!-- Rooms Modals Component -->
+
+<!-- Create Room Modal -->
+<div id="createRoomModal"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-secondary p-6 rounded-xl max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold text-white mb-4">Create Room</h3>
+        <form id="createRoomForm">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Room Name</label>
+                    <input type="text" name="name" required
+                           class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                           placeholder="Enter room name...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Description
+                        (Optional)</label>
+                    <textarea name="description"
+                              class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                              rows="3" placeholder="Describe your room..."></textarea>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <input type="checkbox" name="voice_enabled" id="voiceEnabled"
+                           class="text-primary">
+                    <label for="voiceEnabled" class="text-sm text-gray-300">
+                        🎙️ Enable Voice Chat
+                    </label>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <input type="checkbox" name="discoverable" id="discoverable"
+                           class="text-primary">
+                    <label for="discoverable" class="text-sm text-gray-300">
+                        🌐 Make Room Discoverable
+                    </label>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeCreateRoomModal()"
+                        class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary hover:bg-red-700 rounded-lg transition-colors">
+                    Create Room
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Join Room Modal -->
+<div id="joinRoomModal"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-secondary p-6 rounded-xl max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold text-white mb-4">Join Room</h3>
+        <form id="joinRoomForm">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Invite Code</label>
+                    <input type="text" name="invite_code" required
+                           class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                           placeholder="ROOM-123">
+                    <p class="text-xs text-gray-400 mt-1">Enter the invite code shared by the room
+                        owner</p>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeJoinRoomModal()"
+                        class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                    Join Room
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

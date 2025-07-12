@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBabel - Global Chat</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+
+    {% include 'components/chat_styles.html' %}
+    {% include 'components/shared_layout.html' %}
+</head>
+<body class="bg-dark text-white font-poppins overflow-hidden">
+<!-- ADA COMPLIANCE: Skip to content link -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ADA COMPLIANCE: Screen reader announcements -->
+    <div id="announcements" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+    <!-- Main Chat Container -->
+<div class="flex h-screen" role="main" id="main-content">
+        <!-- Sidebar Component -->
+        {% include 'components/chat_sidebar.html' %}
+
+        <!-- Main Chat Area Component -->
+        {% include 'components/chat_main.html' %}
+    </div>
+
+    <!-- Modal Components -->
+    {% include 'components/chat_modals.html' %}
+
+<!-- MICROSERVICE ORCHESTRATION -->
+<script src="{% url 'components/scripts/core_orchestrator.js' %}"></script>
+<script src="{% url 'components/scripts/error_service.js' %}"></script>
+<script src="{% url 'components/scripts/loading_service.js' %}"></script>
+<script src="{% url 'components/scripts/page_bootstrap.js' %}"></script>
+
+<!-- Core Chat JavaScript Services -->
+    {% include 'components/chat_scripts.html' %}
+
+<!-- Initialize Chat Page -->
+<script>
+    // Initialize chat page with microservices
+    const chatPage = initializePage('chat', {
+        services: ['error', 'loading', 'accessibility'],
+        debugMode: false,
+        analytics: true
+    });
+
+    // Example usage in chat context
+    document.addEventListener('DOMContentLoaded', () => {
+        // Show initial loading
+        chatPage.loading(true, 'Connecting to chat server...');
+
+        // Simulate connection
+        setTimeout(() => {
+            chatPage.loading(false);
+            chatPage.success('Connected to chat server');
+
+            // Track page load
+            chatPage.track('page_loaded', { page: 'chat' });
+        }, 2000);
+    });
+
+    // Global error handling example
+    window.addEventListener('error', (e) => {
+        chatPage.error('Something went wrong. Please refresh the page.');
+    });
+
+    // Socket connection status
+    if (typeof socket !== 'undefined') {
+        socket.on('connect', () => {
+            chatPage.orchestrator.emit('socket:connected');
+        });
+
+        socket.on('disconnect', () => {
+            chatPage.orchestrator.emit('socket:disconnected');
+            chatPage.error('Connection lost. Trying to reconnect...');
+        });
+    }
+</script>
+</body>
+</html>

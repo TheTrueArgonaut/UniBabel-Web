@@ -1,0 +1,30 @@
+{% if chats %}
+<div class="mb-2">
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border border-gray-700/50">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-white">Recent Chats</h3>
+            <a href="/chat" class="text-primary hover:text-red-400 transition-colors text-xs">
+                View All →
+            </a>
+        </div>
+        <div class="space-y-3">
+            {% for chat in chats[:3] %}
+            <div class="flex items-center gap-3 p-3 bg-[#111111] rounded-lg border border-gray-800 hover:border-gray-700 transition-colors">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <i class="ri-user-3-line text-primary text-sm"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-medium text-white">{{ chat.name }}</h4>
+                    <p class="text-gray-400 text-xs">{{ chat.type }} • {{ chat.participants_count }}
+                        participants</p>
+                </div>
+                <a href="/chat?room={{ chat.id }}"
+                   class="bg-primary/10 text-primary px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors text-xs">
+                    Join
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}

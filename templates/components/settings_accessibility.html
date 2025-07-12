@@ -1,0 +1,71 @@
+<!-- Settings Accessibility Component -->
+<section class="settings-card" aria-labelledby="accessibility-heading">
+    <h3 id="accessibility-heading">🛡️ Accessibility Settings</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Screen Reader Mode</h4>
+            <p>Enhanced announcements and descriptions for screen readers</p>
+        </div>
+        <label class="switch" for="screenReaderMode">
+            <input type="checkbox" id="screenReaderMode" aria-describedby="screen-reader-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="screen-reader-help" class="sr-only">Enable enhanced screen reader support with
+            detailed descriptions and announcements
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>High Contrast Mode</h4>
+            <p>Increase contrast for better visibility</p>
+        </div>
+        <label class="switch" for="highContrast">
+            <input type="checkbox" id="highContrast" aria-describedby="contrast-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="contrast-help" class="sr-only">Enable high contrast mode for better text and
+            interface visibility
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Reduce Motion</h4>
+            <p>Minimize animations and transitions</p>
+        </div>
+        <label class="switch" for="reduceMotion">
+            <input type="checkbox" id="reduceMotion" aria-describedby="motion-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="motion-help" class="sr-only">Reduce or disable animations and motion effects</div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Large Text</h4>
+            <p>Increase text size throughout the application</p>
+        </div>
+        <label class="switch" for="largeText">
+            <input type="checkbox" id="largeText" aria-describedby="text-size-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="text-size-help" class="sr-only">Increase text size by 20% for better readability
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Keyboard Navigation Help</h4>
+            <p>Show keyboard shortcuts and navigation hints</p>
+        </div>
+        <label class="switch" for="keyboardHelp">
+            <input type="checkbox" id="keyboardHelp" aria-describedby="keyboard-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="keyboard-help" class="sr-only">Display keyboard shortcuts and navigation help
+            throughout the app
+        </div>
+    </div>
+</section>

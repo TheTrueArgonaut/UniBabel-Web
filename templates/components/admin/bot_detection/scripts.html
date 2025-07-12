@@ -1,0 +1,244 @@
+<!-- ⚙️ BOT DETECTION SCRIPTS MICROSERVICE - SRIMI: Single Responsibility for JavaScript Logic -->
+<script>
+
+// Bot Detection Control Functions
+let adultSensitivity = 5;
+let teenSensitivity = 7;
+
+// Slider event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const adultSlider = document.getElementById('adult-sensitivity-slider');
+    const teenSlider = document.getElementById('teen-sensitivity-slider');
+    
+    if (adultSlider) {
+        adultSlider.addEventListener('input', function(e) {
+            adultSensitivity = parseInt(e.target.value);
+            updateAdultDisplay();
+            updateBotDetectionSettings();
+        });
+    }
+    
+    if (teenSlider) {
+        teenSlider.addEventListener('input', function(e) {
+            teenSensitivity = parseInt(e.target.value);
+            updateTeenDisplay();
+            updateBotDetectionSettings();
+        });
+    }
+    
+    // Initialize displays and load stats
+    updateAdultDisplay();
+    updateTeenDisplay();
+    loadBotDetectionStats();
+    
+    // Refresh stats every 30 seconds
+    setInterval(loadBotDetectionStats, 30000);
+    
+    logActivity('Bot Detection Control Panel loaded');
+});
+
+function updateAdultDisplay() {
+    const valueElement = document.getElementById('adult-sensitivity-value');
+    const thresholdElement = document.getElementById('adult-threshold');
+    const barElement = document.getElementById('adult-threshold-bar');
+    
+    if (valueElement) valueElement.textContent = adultSensitivity;
+    
+    // Calculate threshold based on sensitivity (1-10 scale to 0.2-0.8 threshold)
+    const threshold = 0.9 - (adultSensitivity - 1) * 0.08;
+    if (thresholdElement) thresholdElement.textContent = threshold.toFixed(2);
+    if (barElement) barElement.style.width = (threshold * 100) + '%';
+}
+
+function updateTeenDisplay() {
+    const valueElement = document.getElementById('teen-sensitivity-value');
+    const thresholdElement = document.getElementById('teen-threshold');
+    const barElement = document.getElementById('teen-threshold-bar');
+    
+    if (valueElement) valueElement.textContent = teenSensitivity;
+    
+    // Calculate threshold based on sensitivity (1-10 scale to 0.1-0.6 threshold)
+    const threshold = 0.65 - (teenSensitivity - 1) * 0.05;
+    if (thresholdElement) thresholdElement.textContent = threshold.toFixed(2);
+    if (barElement) barElement.style.width = (threshold * 100) + '%';
+}
+
+function updateBotDetectionSettings() {
+    // Send update to server
+    fetch('/admin/api/update-bot-detection', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            adult_sensitivity: adultSensitivity,
+            teen_sensitivity: teenSensitivity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            logActivity(`Updated sensitivity: Adults=${adultSensitivity}, Teens=${teenSensitivity}`);
+        } else {
+            showError('Failed to update settings: ' + data.error);
+        }
+    })
+    .catch(error => {
+        showError('Error updating settings: ' + error);
+    });
+}
+
+// Preset functions
+function setAdultPreset(preset) {
+    switch(preset) {
+        case 'lenient': adultSensitivity = 2; break;
+        case 'balanced': adultSensitivity = 5; break;
+        case 'strict': adultSensitivity = 8; break;
+    }
+    
+    const slider = document.getElementById('adult-sensitivity-slider');
+    if (slider) slider.value = adultSensitivity;
+    
+    updateAdultDisplay();
+    updateBotDetectionSettings();
+    logActivity(`Set adult preset: ${preset} (level ${adultSensitivity})`);
+}
+
+function setTeenPreset(preset) {
+    switch(preset) {
+        case 'basic': teenSensitivity = 4; break;
+        case 'enhanced': teenSensitivity = 7; break;
+        case 'maximum': teenSensitivity = 10; break;
+    }
+    
+    const slider = document.getElementById('teen-sensitivity-slider');
+    if (slider) slider.value = teenSensitivity;
+    
+    updateTeenDisplay();
+    updateBotDetectionSettings();
+    logActivity(`Set teen preset: ${preset} (level ${teenSensitivity})`);
+}
+
+// Emergency controls
+function emergencyLockdown() {
+    if (confirm('This will set maximum protection for all users. Continue?')) {
+        adultSensitivity = 10;
+        teenSensitivity = 10;
+        
+        const adultSlider = document.getElementById('adult-sensitivity-slider');
+        const teenSlider = document.getElementById('teen-sensitivity-slider');
+        
+        if (adultSlider) adultSlider.value = adultSensitivity;
+        if (teenSlider) teenSlider.value = teenSensitivity;
+        
+        updateAdultDisplay();
+        updateTeenDisplay();
+        updateBotDetectionSettings();
+        logActivity('EMERGENCY LOCKDOWN ACTIVATED', 'critical');
+    }
+}
+
+function temporaryBoost() {
+    if (confirm('This will boost protection for 1 hour. Continue?')) {
+        const originalAdult = adultSensitivity;
+        const originalTeen = teenSensitivity;
+        
+        adultSensitivity = Math.min(adultSensitivity + 3, 10);
+        teenSensitivity = Math.min(teenSensitivity + 2, 10);
+        
+        const adultSlider = document.getElementById('adult-sensitivity-slider');
+        const teenSlider = document.getElementById('teen-sensitivity-slider');
+        
+        if (adultSlider) adultSlider.value = adultSensitivity;
+        if (teenSlider) teenSlider.value = teenSensitivity;
+        
+        updateAdultDisplay();
+        updateTeenDisplay();
+        updateBotDetectionSettings();
+        logActivity('TEMPORARY BOOST ACTIVATED (1 hour)', 'warning');
+        
+        // Schedule reset after 1 hour
+        setTimeout(() => {
+            adultSensitivity = originalAdult;
+            teenSensitivity = originalTeen;
+            
+            if (adultSlider) adultSlider.value = adultSensitivity;
+            if (teenSlider) teenSlider.value = teenSensitivity;
+            
+            updateAdultDisplay();
+            updateTeenDisplay();
+            updateBotDetectionSettings();
+            logActivity('Temporary boost expired - settings restored', 'info');
+        }, 3600000); // 1 hour
+    }
+}
+
+function resetToDefaults() {
+    if (confirm('Reset to default settings?')) {
+        adultSensitivity = 5;
+        teenSensitivity = 7;
+        
+        const adultSlider = document.getElementById('adult-sensitivity-slider');
+        const teenSlider = document.getElementById('teen-sensitivity-slider');
+        
+        if (adultSlider) adultSlider.value = adultSensitivity;
+        if (teenSlider) teenSlider.value = teenSensitivity;
+        
+        updateAdultDisplay();
+        updateTeenDisplay();
+        updateBotDetectionSettings();
+        logActivity('Settings reset to defaults');
+    }
+}
+
+// Activity logging
+function logActivity(message, level = 'info') {
+    const log = document.getElementById('activity-log');
+    if (!log) return;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const levelClass = {
+        'info': 'text-blue-400',
+        'warning': 'text-yellow-400',
+        'critical': 'text-red-400'
+    }[level] || 'text-gray-400';
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = 'flex items-center gap-2 mb-2 text-sm';
+    logEntry.innerHTML = `
+        <span class="text-gray-500">[${timestamp}]</span>
+        <span class="${levelClass}">${message}</span>
+    `;
+    
+    log.insertBefore(logEntry, log.firstChild);
+    
+    // Keep only last 20 entries
+    while (log.children.length > 20) {
+        log.removeChild(log.lastChild);
+    }
+}
+
+function showError(message) {
+    logActivity(message, 'critical');
+}
+
+// Load statistics
+function loadBotDetectionStats() {
+    fetch('/admin/api/bot-detection-stats')
+        .then(response => response.json())
+        .then(data => {
+            const totalAnalyzed = document.getElementById('total-analyzed');
+            const totalBlocked = document.getElementById('total-blocked');
+            const adultUsers = document.getElementById('adult-users');
+            const teenUsers = document.getElementById('teen-users');
+            
+            if (totalAnalyzed) totalAnalyzed.textContent = data.total_analyzed || 0;
+            if (totalBlocked) totalBlocked.textContent = data.total_blocked || 0;
+            if (adultUsers) adultUsers.textContent = data.adult_users || 0;
+            if (teenUsers) teenUsers.textContent = data.teen_users || 0;
+        })
+        .catch(error => {
+            console.error('Error loading stats:', error);
+        });
+}
+</script>

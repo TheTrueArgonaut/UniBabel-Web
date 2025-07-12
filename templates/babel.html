@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babel - UniBabel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- MICROSERVICE STYLES -->
+    {% include 'components/babel_styles.html' %}
+    {% include 'components/babel_navigation_styles.html' %}
+    {% include 'components/babel_post_styles.html' %}
+    {% include 'components/babel_timeline_styles.html' %}
+    {% include 'components/babel_sidebar_styles.html' %}
+</head>
+<body>
+<!-- HEADER MICROSERVICE -->
+{% include 'components/babel_header.html' %}
+
+    <div class="main-layout">
+        <!-- SIDEBAR MICROSERVICE -->
+        {% include 'components/babel_sidebar.html' %}
+
+        <!-- MAIN CONTENT -->
+        <div class="babel-container">
+            <!-- POST CREATOR MICROSERVICE -->
+            {% include 'components/babel_post_creator.html' %}
+
+            <!-- TIMELINE MICROSERVICE -->
+            {% include 'components/babel_timeline.html' %}
+        </div>
+    </div>
+
+<!-- MODALS MICROSERVICE -->
+{% include 'components/babel_modals.html' %}
+
+<!-- JAVASCRIPT MICROSERVICES -->
+<script src="{{ url_for('static', filename='js/babel_core.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/babel-services.js') }}"></script>
+
+    <script>
+        // BABEL ORCHESTRATOR - SRIMI COMPLIANT
+        // Single Responsibility: Application initialization & coordination
+        
+        // Initialize application when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Babel application initialized with microservices architecture');
+            
+            // Initialize core services
+            if (window.babelCore) {
+                console.log('Babel Core loaded');
+            }
+            
+            // Load friend groups
+            loadFriendGroups();
+        });
+        
+        // Modal functions - Reactive interface
+        function openCreateGroupModal() {
+            document.getElementById('createGroupModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('createGroupModal').style.display = 'none';
+        }
+        
+        // Add event listener to the + button - Injection principle
+        document.addEventListener('DOMContentLoaded', () => {
+            const addButton = document.querySelector('.add-group-btn');
+            if (addButton) {
+                addButton.addEventListener('click', openCreateGroupModal);
+            }
+        });
+        
+        // Create group function - Micro service
+        async function createGroup() {
+            const groupName = document.getElementById('groupName').value.trim();
+            const groupType = document.getElementById('groupType').value;
+            
+            if (!groupName) {
+                alert('Please enter a group name');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/friend-groups/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        group_name: groupName, 
+                        group_type: groupType 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`Friend group "${data.group_name}" created successfully!`);
+                    closeModal();
+                    loadFriendGroups(); // Reload the sidebar
+                    
+                    // Clear form
+                    document.getElementById('groupName').value = '';
+                    document.getElementById('groupType').value = 'mixed';
+                } else {
+                    alert(`Failed to create group: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            }
+        }
+        
+        // Load friend groups - Interface abstraction
+        async function loadFriendGroups() {
+            try {
+                const response = await fetch('/api/friend-groups/my-groups');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayFriendGroups(data.groups);
+                }
+            } catch (error) {
+                console.error('Error loading friend groups:', error);
+            }
+        }
+        
+        // Display friend groups in sidebar - Single Responsibility
+        function displayFriendGroups(groups) {
+            const container = document.querySelector('.sidebar-section');
+            
+            // Clear existing groups (keep header)
+            const existingGroups = container.querySelectorAll('.friend-group');
+            existingGroups.forEach(group => group.remove());
+            
+            if (groups.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-groups';
+                emptyState.innerHTML = `
+                    <p style="color: #999; text-align: center; padding: 20px; font-size: 14px;">
+                        No friend groups yet.<br>
+                        Click + to create your first group!
+                    </p>
+                `;
+                container.appendChild(emptyState);
+                return;
+            }
+            
+            groups.forEach(group => {
+                const groupElement = document.createElement('div');
+                groupElement.className = 'friend-group';
+                groupElement.innerHTML = `
+                    <div class="group-avatar">${group.group_name[0].toUpperCase()}</div>
+                    <div class="group-info">
+                        <div class="group-name">${group.group_name}</div>
+                        <div class="group-meta">${group.member_count} members • ${group.group_type}</div>
+                    </div>
+                    <div class="group-actions">
+                        ${group.can_babel ? '<button class="group-action" onclick="postToGroup(' + group.group_id + ')">📝</button>' : ''}
+                        ${group.can_chat ? '<button class="group-action" onclick="openGroupChat(' + group.group_id + ')">💬</button>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(groupElement);
+            });
+        }
+        
+        // Group actions - Micro interfaces
+        function postToGroup(groupId) {
+            alert(`Post to group ${groupId} - Feature coming soon!`);
+        }
+        
+        function openGroupChat(groupId) {
+            alert(`Open group chat ${groupId} - Feature coming soon!`);
+        }
+        
+        // Click outside modal to close - Reactive behavior
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('createGroupModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<main class="flex-1 flex flex-col" id="main-content" role="main">
+    <!-- Chat Header -->
+    <header class="p-4 border-b border-gray-700 bg-secondary" id="chatHeader">
+        <!-- Dynamic chat header will be populated here -->
+        <div class="text-center text-gray-400 py-4" role="status">
+            <i class="ri-chat-smile-2-line text-3xl mb-2" aria-hidden="true"></i>
+            <p>Select a conversation to start chatting</p>
+        </div>
+    </header>
+
+    <!-- Messages Area -->
+    <section class="flex-1 p-4 overflow-y-auto chat-scroll bg-dark"
+             id="messagesContainer"
+             role="log"
+             aria-label="Chat messages"
+             aria-live="polite">
+        <!-- Welcome Message -->
+        <div class="text-center py-8" role="banner">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ri-global-line text-2xl text-primary" aria-hidden="true"></i>
+            </div>
+            <h2 class="text-lg font-semibold text-white mb-2">Welcome to UniBabel!</h2>
+            <p class="text-gray-400 text-sm max-w-md mx-auto">
+                Where languages unite! Type in your language, they see it in theirs. The
+                Tower of Babel - but reversed!
+            </p>
+        </div>
+
+        <!-- Messages will be dynamically loaded here -->
+        <div id="messagesList" role="log" aria-live="polite"></div>
+
+        <!-- Typing Indicator -->
+        <div class="flex items-start space-x-3"
+             id="typingIndicator"
+             style="display: none;"
+             role="status"
+             aria-label="Someone is typing">
+            <div class="w-8 h-8 user-avatar rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0"
+                 aria-hidden="true">?
+            </div>
+            <div class="message-received p-3">
+                <div class="flex space-x-1">
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dots"
+                         aria-hidden="true"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dots"
+                         style="animation-delay: 0.2s;" aria-hidden="true"></div>
+                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dots"
+                         style="animation-delay: 0.4s;" aria-hidden="true"></div>
+                </div>
+            </div>
+            <span class="sr-only">User is typing a message</span>
+        </div>
+    </section>
+
+    <!-- Message Input -->
+    <footer class="p-4 border-t border-gray-700 bg-secondary" role="form">
+        <div class="flex items-center space-x-3">
+            <button class="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors focus:ring-2"
+                    aria-label="Attach file"
+                    title="Attach file">
+                <i class="ri-attachment-line text-gray-300" aria-hidden="true"></i>
+            </button>
+
+            <div class="flex-1 relative">
+                <label for="messageInput" class="sr-only">Type your message</label>
+                <input type="text"
+                       id="messageInput"
+                       placeholder="Type your message..."
+                       class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-full px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-primary"
+                       maxlength="1000"
+                       aria-describedby="message-help">
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:ring-2"
+                        aria-label="Insert emoji"
+                        title="Insert emoji">
+                    <i class="ri-emotion-line" aria-hidden="true"></i>
+                </button>
+                <div id="message-help" class="sr-only">Press Enter to send message, maximum 1000
+                    characters
+                </div>
+            </div>
+
+            <button id="sendButton"
+                    class="w-10 h-10 bg-primary hover:bg-red-700 rounded-full flex items-center justify-center transition-colors focus:ring-2"
+                    aria-label="Send message"
+                    title="Send message">
+                <i class="ri-send-plane-fill text-white" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Language Info -->
+        <div class="mt-2 text-xs text-gray-400 text-center" role="status">
+            <span class="bg-gray-700 px-2 py-1 rounded-full">
+                <i class="ri-global-line mr-1" aria-hidden="true"></i>
+                <span aria-label="Translation information">
+                    You type in: <strong>{{ current_user.preferred_language.upper() }}</strong> • They see it in: <strong>Spanish</strong>
+                </span>
+            </span>
+        </div>
+    </footer>
+</main>

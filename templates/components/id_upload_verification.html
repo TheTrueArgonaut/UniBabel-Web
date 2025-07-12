@@ -1,0 +1,62 @@
+<!-- 🎯 ID UPLOAD VERIFICATION MICROSERVICE - Single Responsibility: ID upload orchestration -->
+<div id="id-upload-verification" class="verification-method hidden">
+    <!-- ID UPLOAD INFO MICROSERVICE -->
+    {% include 'components/id_upload_info.html' %}
+
+    <div class="form-group">
+        <label class="form-label">Upload Government ID</label>
+        <p class="form-hint">Driver's License, Passport, State ID, or National ID Card</p>
+
+        <!-- ID UPLOAD AREA MICROSERVICE -->
+        {% include 'components/id_upload_area.html' %}
+
+        <div id="id-upload-feedback" class="feedback"></div>
+    </div>
+
+    <!-- PRIVACY NOTICE MICROSERVICE -->
+    {% include 'components/privacy_notice.html' %}
+
+    <!-- SMART BIRTHDATE NOTICE -->
+    <div id="birthdate-auto-notice" class="auto-notice hidden">
+        <div class="notice-content">
+            <i class="ri-magic-line text-blue-400"></i>
+            <div>
+                <h6>Smart Age Detection</h6>
+                <p>We'll automatically extract your birthdate from your ID - no need to enter it
+                    manually!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auto-notice {
+        margin-top: 16px;
+        padding: 16px;
+        background: #1e3a8a;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+    }
+
+    .auto-notice.hidden {
+        display: none;
+    }
+
+    .auto-notice .notice-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .auto-notice h6 {
+        font-weight: 600;
+        color: #60a5fa;
+        margin-bottom: 4px;
+    }
+
+    .auto-notice p {
+        font-size: 0.75rem;
+        color: #93c5fd;
+        line-height: 1.4;
+    }
+</style>

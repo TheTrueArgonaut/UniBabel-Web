@@ -1,0 +1,47 @@
+<!-- Settings Privacy Component -->
+<section class="settings-card" aria-labelledby="privacy-heading">
+    <h3 id="privacy-heading">🔒 Privacy & Data</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Profile Visibility</h4>
+            <p>Who can discover and view your profile</p>
+        </div>
+        <label for="profileVisibility" class="sr-only">Select profile visibility</label>
+        <select id="profileVisibility" aria-describedby="visibility-help">
+            <option value="public">Public - Anyone can find me</option>
+            <option value="friends">Friends Only</option>
+            <option value="private">Private - Not discoverable</option>
+        </select>
+        <div id="visibility-help" class="sr-only">Control who can find and view your profile
+            information
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Data Usage Analytics</h4>
+            <p>Help improve UniBabel by sharing usage statistics</p>
+        </div>
+        <label class="switch" for="dataAnalytics">
+            <input type="checkbox" id="dataAnalytics" checked aria-describedby="analytics-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="analytics-help" class="sr-only">Share anonymous usage data to help improve the
+            application
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Read Receipts</h4>
+            <p>Show others when you've read their messages</p>
+        </div>
+        <label class="switch" for="readReceipts">
+            <input type="checkbox" id="readReceipts" checked aria-describedby="receipts-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="receipts-help" class="sr-only">Let others know when you have read their messages
+        </div>
+    </div>
+</section>

@@ -1,0 +1,37 @@
+<div class="mb-2">
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-3 shadow-2xl border border-gray-700/50">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-bold text-white">Profile</h3>
+            <button class="bg-primary/20 text-primary w-5 h-5 rounded-lg flex items-center justify-center hover:bg-primary/30 transition-colors"
+                    title="Edit profile picture">
+                <i class="ri-edit-line text-xs"></i>
+            </button>
+        </div>
+
+        <!-- Profile Picture Display -->
+        <div class="flex flex-col items-center space-y-2">
+            <div class="relative group cursor-pointer"
+                 onclick="openProfilePictureModal()">
+                <div id="profilePictureContainer"
+                     class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border-2 border-gray-700 hover:border-primary/50 transition-colors overflow-hidden">
+                    <img id="profilePictureImage"
+                         class="w-full h-full object-cover rounded-full hidden"
+                         alt="Profile Picture">
+                    <div id="profilePicturePlaceholder"
+                         class="flex flex-col items-center justify-center">
+                        <i class="ri-user-3-line text-2xl text-primary mb-1"></i>
+                        <span class="text-xs text-gray-400">Add Photo</span>
+                    </div>
+                </div>
+                <div class="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="ri-camera-line text-white text-lg"></i>
+                </div>
+            </div>
+            <div class="text-center">
+                <h4 class="text-sm font-medium text-white">{{ user.display_name or user.username
+                    }}</h4>
+                <p class="text-xs text-gray-400">@{{ user.username }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+<!-- Settings Premium Component -->
+
+<!-- PREMIUM SUBSCRIPTION MANAGEMENT -->
+<section id="premiumSection" class="settings-card hidden" aria-labelledby="premium-heading">
+    <h3 id="premium-heading">⭐ Premium Subscription</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Subscription Status</h4>
+            <p id="subscriptionStatus">Premium Active - Data collection blocked</p>
+        </div>
+        <span id="premiumBadge"
+              class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            ⭐ Premium
+        </span>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Data Collection Protection</h4>
+            <p>Your data is protected from harvesting and profiling</p>
+        </div>
+        <label class="switch" for="dataProtection">
+            <input type="checkbox" id="dataProtection" checked disabled
+                   aria-describedby="data-protection-help">
+            <span class="slider" role="presentation" style="background-color: #10b981;"></span>
+        </label>
+        <div id="data-protection-help" class="sr-only">Data collection protection is active with
+            your premium subscription
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Premium Badge</h4>
+            <p>Premium star displayed next to your name</p>
+        </div>
+        <label class="switch" for="premiumBadgeToggle">
+            <input type="checkbox" id="premiumBadgeToggle" checked disabled
+                   aria-describedby="premium-badge-help">
+            <span class="slider" role="presentation" style="background-color: #10b981;"></span>
+        </label>
+        <div id="premium-badge-help" class="sr-only">Premium star badge is included with your
+            subscription
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Room Priority</h4>
+            <p>Your rooms appear higher in discovery lists</p>
+        </div>
+        <label class="switch" for="roomPriority">
+            <input type="checkbox" id="roomPriority" checked disabled
+                   aria-describedby="room-priority-help">
+            <span class="slider" role="presentation" style="background-color: #10b981;"></span>
+        </label>
+        <div id="room-priority-help" class="sr-only">Room priority boost is active with your premium
+            subscription
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Billing Information</h4>
+            <p>Next billing: <span id="nextBilling">Loading...</span> • $7.99/month</p>
+        </div>
+        <button class="btn btn-secondary"
+                onclick="manageBilling()"
+                aria-describedby="billing-help">
+            Manage Billing
+        </button>
+        <div id="billing-help" class="sr-only">Manage your payment method and billing details</div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Cancel Subscription</h4>
+            <p>Cancel anytime - data collection will resume</p>
+        </div>
+        <button class="btn"
+                style="background: linear-gradient(45deg, #ef4444, #dc2626);"
+                onclick="cancelSubscription()"
+                aria-describedby="cancel-help">
+            Cancel Subscription
+        </button>
+        <div id="cancel-help" class="sr-only">Cancel your premium subscription - you can resubscribe
+            anytime
+        </div>
+    </div>
+</section>
+
+<!-- FREE USER UPGRADE PROMPT -->
+<section id="upgradeSection" class="settings-card hidden" aria-labelledby="upgrade-heading">
+    <h3 id="upgrade-heading">💰 Data Collection & Privacy</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Data Collection Status</h4>
+            <p>Currently collecting data for revenue generation</p>
+        </div>
+        <label class="switch" for="dataCollectionStatus">
+            <input type="checkbox" id="dataCollectionStatus" checked disabled
+                   aria-describedby="data-collection-help">
+            <span class="slider" role="presentation"></span>
+        </label>
+        <div id="data-collection-help" class="sr-only">Data collection is currently active - upgrade
+            to premium to disable
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Privacy Protection</h4>
+            <p>Stop data collection • Premium star • Room priority</p>
+        </div>
+        <button class="btn" onclick="window.location.href='/premium'"
+                aria-describedby="upgrade-help">
+            Upgrade - $7.99/month
+        </button>
+        <div id="upgrade-help" class="sr-only">Visit the premium page to upgrade your account and
+            stop data collection
+        </div>
+    </div>
+</section>

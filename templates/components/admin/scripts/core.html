@@ -1,0 +1,1627 @@
+<script>
+
+// Core Admin Dashboard Functions
+console.log('🧛‍♂️ UniBabel Admin Dashboard Loaded');
+
+// Real-time dashboard stats update
+function loadDashboardStats() {
+    fetch('/api/admin/dashboard-stats')
+        .then(response => response.json())
+        .then(stats => {
+            // Use only real data from API, no placeholders
+            document.getElementById('adult-users').innerText = stats.adult_users || '0';
+            document.getElementById('minor-users').innerText = stats.minor_users || '0';
+            document.getElementById('sales').innerText = '$' + (stats.revenue || '0');
+            document.getElementById('harvesters').innerText = stats.harvesters || '0';
+        })
+        .catch(error => {
+            // Show zeros instead of fake data when API fails
+            console.warn('Dashboard stats API failed:', error);
+            document.getElementById('adult-users').innerText = '0';
+            document.getElementById('minor-users').innerText = '0';
+            document.getElementById('sales').innerText = '$0';
+            document.getElementById('harvesters').innerText = '0';
+        });
+}
+
+// UI notification system
+function showNotification(message, type) {
+    if(document.getElementById("toast-notification")) {
+        document.getElementById("toast-notification").remove();
+    }
+    let color = "bg-blue-600";
+    if(type === "success") color = "bg-green-600";
+    if(type === "error") color = "bg-red-600";
+    if(type === "info") color = "bg-cyan-600";
+    
+    const toast = document.createElement("div");
+    toast.id = "toast-notification";
+    toast.className = `${color} text-white px-6 py-3 rounded-lg shadow-lg fixed top-4 right-4 z-50 fade-in`;
+    toast.style.transition = "opacity 0.3s";
+    toast.innerHTML = `
+        <div class="flex items-center">
+            <span class="mr-3">${
+                type === "success" ? "✔️" : type === "error" ? "❌" : "ℹ️"
+            }</span>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 400);
+    }, 2740);
+}
+
+// General utility functions
+function showLoadingState(message) {
+    document.getElementById("data-display").style.display = "block";
+    document.getElementById("data-content").innerHTML = `
+        <div class="text-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+            <p class="text-gray-400">${message}</p>
+        </div>
+    `;
+}
+
+function showErrorState(message) {
+    document.getElementById("data-content").innerHTML = `
+        <div class="text-center py-8">
+            <div class="text-red-400 text-6xl mb-4">❌</div>
+            <p class="text-red-400 text-lg">${message}</p>
+            <button onclick="closeDataDisplay()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded">
+                Close
+            </button>
+        </div>
+    `;
+}
+
+// Initialize dashboard
+function initializeDashboard() {
+    console.log('🧛‍♂️ Initializing SRIMI Admin Dashboard');
+    loadDashboardStats();
+    initializeBotControls();
+    setInterval(loadDashboardStats, 30000);
+    showNotification("SRIMI Admin Dashboard Initialized", "success");
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', initializeDashboard);
+
+// Admin Chat System
+function openAdminChat() {
+    console.log('🧛‍♂️ Opening Admin Chat...');
+    
+    // Create admin chat modal
+    const modal = document.createElement('div');
+    modal.id = 'admin-chat-modal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl max-w-5xl w-full mx-4 h-[700px] flex flex-col gothic-border">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-orange-600/20 flex items-center justify-center border border-orange-600/50">
+                        <i class="ri-team-line text-xl text-orange-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">🧛‍♂️ Admin Communications</h3>
+                        <p class="text-sm text-gray-400">Secure global admin messaging with translation</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 text-sm text-gray-400">
+                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                        <span id="admin-count">Loading...</span>
+                    </div>
+                    <button onclick="closeAdminChat()" class="text-gray-400 hover:text-white">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-gray-700 bg-gray-900/30">
+                <button onclick="switchAdminChatTab('group')" id="group-tab" class="flex-1 px-4 py-3 text-sm font-semibold text-orange-400 border-b-2 border-orange-400 bg-gray-800/50">
+                    <i class="ri-group-line mr-2"></i>Group Chat
+                </button>
+                <button onclick="switchAdminChatTab('direct')" id="direct-tab" class="flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600">
+                    <i class="ri-message-3-line mr-2"></i>Direct Messages
+                </button>
+            </div>
+            
+            <!-- Chat Content -->
+            <div class="flex-1 flex">
+                <!-- Group Chat Tab -->
+                <div id="group-chat-tab" class="flex-1 flex">
+                    <!-- Admin List -->
+                    <div class="w-64 bg-gray-900/30 border-r border-gray-700 p-4">
+                        <h4 class="text-sm font-semibold text-orange-400 mb-3">🌍 ONLINE ADMINS</h4>
+                        <div id="admin-list" class="space-y-2">
+                            <div class="text-center text-gray-400 py-4">
+                                <i class="ri-loader-line animate-spin text-2xl mb-2"></i>
+                                <p class="text-sm">Loading admins...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Group Messages Area -->
+                    <div class="flex-1 flex flex-col">
+                        <div id="group-messages" class="flex-1 p-4 overflow-y-auto bg-gray-900/20">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="ri-chat-3-line text-4xl mb-2 text-orange-400"></i>
+                                <p class="text-white font-semibold">Welcome to Admin Group Chat</p>
+                                <p class="text-sm">Messages are fully translated to your preferred language 🌍</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Group Message Input -->
+                        <div class="p-4 border-t border-gray-700">
+                            <div class="flex gap-2">
+                                <input type="text" id="group-message-input" placeholder="Type your message to all admins..." 
+                                       class="flex-1 bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+                                       onkeypress="handleGroupMessageKeyPress(event)">
+                                <button onclick="sendGroupMessage()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded transition-colors">
+                                    <i class="ri-send-plane-line"></i>
+                                </button>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="sendQuickGroupMessage('🚨 Priority Alert', 'High priority system issue detected')" 
+                                        class="bg-red-600/20 text-red-400 px-2 py-1 rounded text-xs border border-red-600/50 hover:bg-red-600/40 transition-colors">
+                                    🚨 Priority Alert
+                                </button>
+                                <button onclick="sendQuickGroupMessage('📊 Daily Report', 'Daily system report is ready for review')" 
+                                        class="bg-blue-600/20 text-blue-400 px-2 py-1 rounded text-xs border border-blue-600/50 hover:bg-blue-600/40 transition-colors">
+                                    📊 Daily Report
+                                </button>
+                                <button onclick="sendQuickGroupMessage('✅ All Clear', 'System checks completed successfully')" 
+                                        class="bg-green-600/20 text-green-400 px-2 py-1 rounded text-xs border border-green-600/50 hover:bg-green-600/40 transition-colors">
+                                    ✅ All Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Direct Messages Tab -->
+                <div id="direct-messages-tab" class="flex-1 flex" style="display: none;">
+                    <!-- Admin Search & List -->
+                    <div class="w-80 bg-gray-900/30 border-r border-gray-700 p-4">
+                        <div class="mb-4">
+                            <input type="text" id="admin-search" placeholder="Search admins..." 
+                                   class="w-full bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+                                   onkeyup="searchAdmins()">
+                        </div>
+                        
+                        <h4 class="text-sm font-semibold text-orange-400 mb-3">💬 DIRECT MESSAGES</h4>
+                        <div id="dm-conversations" class="space-y-2 mb-6">
+                            <div class="text-center text-gray-500 py-4">
+                                <i class="ri-loader-line animate-spin text-2xl mb-2"></i>
+                                <p class="text-sm">Loading conversations...</p>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-sm font-semibold text-gray-400 mb-3">👥 ALL ADMINS</h4>
+                        <div id="all-admins-list" class="space-y-2">
+                            <div class="text-center text-gray-500 py-4">
+                                <i class="ri-loader-line animate-spin text-2xl mb-2"></i>
+                                <p class="text-sm">Loading admins...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Direct Messages Area -->
+                    <div class="flex-1 flex flex-col">
+                        <div id="dm-header" class="px-4 py-3 border-b border-gray-700 bg-gray-900/30" style="display: none;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-orange-600/20 flex items-center justify-center">
+                                    <i class="ri-user-line text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-semibold" id="dm-recipient-name">Select an admin</h4>
+                                    <p class="text-xs text-gray-400" id="dm-recipient-status">Online</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="direct-messages" class="flex-1 p-4 overflow-y-auto bg-gray-900/20">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="ri-message-3-line text-4xl mb-2 text-orange-400"></i>
+                                <p class="text-white font-semibold">Select an admin to start messaging</p>
+                                <p class="text-sm">Private messages are encrypted and translated 🔒</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Direct Message Input -->
+                        <div id="dm-input-area" class="p-4 border-t border-gray-700" style="display: none;">
+                            <div class="flex gap-2">
+                                <input type="text" id="dm-message-input" placeholder="Type your private message..." 
+                                       class="flex-1 bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+                                       onkeypress="handleDirectMessageKeyPress(event)">
+                                <button onclick="sendDirectMessage()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded transition-colors">
+                                    <i class="ri-send-plane-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Initialize chat data
+    loadAdminChatData();
+    
+    // Start polling for new messages
+    startAdminChatPolling();
+    
+    // Set initial focus
+    document.getElementById('group-message-input').focus();
+}
+
+// Tab switching
+let currentAdminChatTab = 'group';
+let selectedAdminId = null;
+
+function switchAdminChatTab(tab) {
+    currentAdminChatTab = tab;
+    
+    // Update tab buttons
+    document.getElementById('group-tab').className = tab === 'group' 
+        ? 'flex-1 px-4 py-3 text-sm font-semibold text-orange-400 border-b-2 border-orange-400 bg-gray-800/50'
+        : 'flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600';
+    
+    document.getElementById('direct-tab').className = tab === 'direct' 
+        ? 'flex-1 px-4 py-3 text-sm font-semibold text-orange-400 border-b-2 border-orange-400 bg-gray-800/50'
+        : 'flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600';
+    
+    // Show/hide tab content
+    document.getElementById('group-chat-tab').style.display = tab === 'group' ? 'flex' : 'none';
+    document.getElementById('direct-messages-tab').style.display = tab === 'direct' ? 'flex' : 'none';
+    
+    // Load appropriate data
+    if (tab === 'direct') {
+        loadDirectMessageData();
+    }
+}
+
+function searchAdmins() {
+    const searchTerm = document.getElementById('admin-search').value.toLowerCase();
+    const adminItems = document.querySelectorAll('#all-admins-list .admin-item');
+    
+    adminItems.forEach(item => {
+        const username = item.querySelector('.admin-username').textContent.toLowerCase();
+        if (username.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function selectAdminForDM(adminId, username, language) {
+    selectedAdminId = adminId;
+    
+    // Update header
+    document.getElementById('dm-recipient-name').textContent = username;
+    document.getElementById('dm-recipient-status').textContent = `Online • ${language || 'EN'}`;
+    document.getElementById('dm-header').style.display = 'block';
+    document.getElementById('dm-input-area').style.display = 'block';
+    
+    // Load direct messages with this admin
+    loadDirectMessagesWithAdmin(adminId);
+    
+    // Focus input
+    document.getElementById('dm-message-input').focus();
+}
+
+function loadDirectMessageData() {
+    // Load existing DM conversations
+    fetch('/api/admin/dm-conversations')
+        .then(response => response.json())
+        .then(data => {
+            const conversationsDiv = document.getElementById('dm-conversations');
+            
+            if (data.success && data.conversations && data.conversations.length > 0) {
+                let conversationsHtml = '';
+                data.conversations.forEach(conv => {
+                    conversationsHtml += `
+                        <div class="flex items-center gap-2 p-2 rounded hover:bg-gray-800/50 cursor-pointer transition-colors" 
+                             onclick="selectAdminForDM(${conv.admin_id}, '${conv.username}', '${conv.language || 'EN'}')">
+                            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-300 font-medium">${conv.username}</div>
+                                <div class="text-xs text-gray-500 truncate">${conv.last_message || 'No messages yet'}</div>
+                            </div>
+                            <div class="text-xs text-gray-500">${conv.language || 'EN'}</div>
+                        </div>
+                    `;
+                });
+                conversationsDiv.innerHTML = conversationsHtml;
+            } else {
+                conversationsDiv.innerHTML = `
+                    <div class="text-center text-gray-500 py-4">
+                        <i class="ri-chat-off-line text-2xl mb-2"></i>
+                        <p class="text-xs">No conversations yet</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading DM conversations:', error);
+        });
+    
+    // Load all admins for new conversations
+    fetch('/api/admin/all-admins')
+        .then(response => response.json())
+        .then(data => {
+            const allAdminsDiv = document.getElementById('all-admins-list');
+            
+            if (data.success && data.admins) {
+                let adminsHtml = '';
+                data.admins.forEach(admin => {
+                    adminsHtml += `
+                        <div class="admin-item flex items-center gap-2 p-2 rounded hover:bg-gray-800/50 cursor-pointer transition-colors" 
+                             onclick="selectAdminForDM(${admin.id}, '${admin.username}', '${admin.language || 'EN'}')">
+                            <div class="w-2 h-2 rounded-full ${admin.online ? 'bg-green-400' : 'bg-gray-500'}"></div>
+                            <div class="flex-1">
+                                <div class="admin-username text-sm text-gray-300">${admin.username}</div>
+                                <div class="text-xs text-gray-500">${admin.online ? 'Online' : 'Offline'}</div>
+                            </div>
+                            <div class="text-xs text-gray-500">${admin.language || 'EN'}</div>
+                        </div>
+                    `;
+                });
+                allAdminsDiv.innerHTML = adminsHtml;
+            } else {
+                allAdminsDiv.innerHTML = '<p class="text-red-400 text-sm">Error loading admins</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading all admins:', error);
+        });
+}
+
+function loadDirectMessagesWithAdmin(adminId) {
+    fetch(`/api/admin/dm-messages/${adminId}`)
+        .then(response => response.json())
+        .then(data => {
+            const messagesDiv = document.getElementById('direct-messages');
+            
+            if (data.success && data.messages && data.messages.length > 0) {
+                let messagesHtml = '';
+                data.messages.forEach(msg => {
+                    const timestamp = new Date(msg.timestamp).toLocaleString();
+                    const isCurrentUser = msg.sender_id === window.currentAdminId;
+                    
+                    messagesHtml += `
+                        <div class="mb-4 ${isCurrentUser ? 'text-right' : 'text-left'}">
+                            <div class="inline-block max-w-md px-3 py-2 rounded-lg ${
+                                isCurrentUser ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-200'
+                            }">
+                                <p class="text-sm">${msg.content}</p>
+                                <p class="text-xs opacity-70 mt-1">${timestamp}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                messagesDiv.innerHTML = messagesHtml;
+            } else {
+                messagesDiv.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="ri-message-3-line text-4xl mb-2 text-orange-400"></i>
+                        <p class="text-white font-semibold">Start a private conversation</p>
+                        <p class="text-sm">Your messages will be encrypted and translated 🔒</p>
+                    </div>
+                `;
+            }
+            
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error loading direct messages:', error);
+        });
+}
+
+// Message handling functions
+function handleGroupMessageKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendGroupMessage();
+    }
+}
+
+function handleDirectMessageKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendDirectMessage();
+    }
+}
+
+function sendGroupMessage() {
+    const messageInput = document.getElementById('group-message-input');
+    const message = messageInput.value.trim();
+    
+    if (!message) {
+        showNotification('Please enter a message', 'error');
+        return;
+    }
+    
+    fetch('/api/admin/send-group-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: message,
+            message_type: 'admin_group_chat'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Message sent to all admins! 🌍', 'success');
+            messageInput.value = '';
+            loadGroupMessages();
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending group message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+
+function sendDirectMessage() {
+    if (!selectedAdminId) {
+        showNotification('Please select an admin first', 'error');
+        return;
+    }
+    
+    const messageInput = document.getElementById('dm-message-input');
+    const message = messageInput.value.trim();
+    
+    if (!message) {
+        showNotification('Please enter a message', 'error');
+        return;
+    }
+    
+    fetch('/api/admin/send-direct-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            target_admin_id: selectedAdminId,
+            content: message,
+            message_type: 'admin_direct_message'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Private message sent! 🔒', 'success');
+            messageInput.value = '';
+            loadDirectMessagesWithAdmin(selectedAdminId);
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending direct message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+
+function sendQuickGroupMessage(title, content) {
+    const quickMessage = `${title}: ${content}`;
+    
+    fetch('/api/admin/send-group-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: quickMessage,
+            message_type: 'admin_system_alert'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`${title} sent to all admins! 🌍`, 'success');
+            loadGroupMessages();
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending quick group message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+
+function closeAdminChat() {
+    const modal = document.getElementById('admin-chat-modal');
+    if (modal) {
+        modal.remove();
+    }
+    
+    // Stop polling
+    if (window.adminChatInterval) {
+        clearInterval(window.adminChatInterval);
+    }
+}
+
+function loadAdminChatData() {
+    // Load online admins
+    fetch('/api/admin/online-admins')
+        .then(response => response.json())
+        .then(data => {
+            const adminList = document.getElementById('admin-list');
+            const adminCount = document.getElementById('admin-count');
+            
+            if (data.success && data.admins) {
+                adminCount.textContent = `${data.admins.length} online`;
+                
+                let adminHtml = '';
+                data.admins.forEach(admin => {
+                    adminHtml += `
+                        <div class="flex items-center gap-2 p-2 rounded hover:bg-gray-800/50">
+                            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                            <span class="text-sm text-gray-300">${admin.username}</span>
+                            <span class="text-xs text-gray-500 ml-auto">${admin.language || 'EN'}</span>
+                        </div>
+                    `;
+                });
+                adminList.innerHTML = adminHtml;
+            } else {
+                adminCount.textContent = 'Error loading';
+                adminList.innerHTML = '<p class="text-red-400 text-sm">Error loading admins</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading admins:', error);
+            document.getElementById('admin-count').textContent = 'Error';
+        });
+    
+    // Load recent messages
+    loadGroupMessages();
+}
+
+function loadGroupMessages() {
+    fetch('/api/admin/admin-messages')
+        .then(response => response.json())
+        .then(data => {
+            const messagesDiv = document.getElementById('group-messages');
+            
+            if (data.success && data.messages && data.messages.length > 0) {
+                let messagesHtml = '';
+                data.messages.forEach(msg => {
+                    const timestamp = new Date(msg.timestamp).toLocaleString();
+                    const isCurrentUser = msg.sender_id === window.currentAdminId;
+                    
+                    messagesHtml += `
+                        <div class="mb-4 ${isCurrentUser ? 'text-right' : 'text-left'}">
+                            <div class="inline-block max-w-md px-3 py-2 rounded-lg ${
+                                isCurrentUser ? 'bg-orange-600 text-white' : 'bg-gray-700 text-gray-200'
+                            }">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-semibold">${msg.sender_username}</span>
+                                    <span class="text-xs opacity-70">${msg.sender_language || 'EN'}</span>
+                                </div>
+                                <p class="text-sm">${msg.content}</p>
+                                <p class="text-xs opacity-70 mt-1">${timestamp}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                messagesDiv.innerHTML = messagesHtml;
+            } else {
+                messagesDiv.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="ri-chat-3-line text-4xl mb-2"></i>
+                        <p>No messages yet</p>
+                        <p class="text-sm">Start the conversation!</p>
+                    </div>
+                `;
+            }
+            
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error loading messages:', error);
+            document.getElementById('group-messages').innerHTML = `
+                <div class="text-center text-red-400 py-8">
+                    <i class="ri-error-warning-line text-4xl mb-2"></i>
+                    <p>Error loading messages</p>
+                </div>
+            `;
+        });
+}
+
+function handleAdminMessageKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendAdminMessage();
+    }
+}
+
+function sendAdminMessage() {
+    const messageInput = document.getElementById('admin-message-input');
+    const message = messageInput.value.trim();
+    
+    if (!message) {
+        showNotification('Please enter a message', 'error');
+        return;
+    }
+    
+    fetch('/api/admin/send-admin-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: message,
+            message_type: 'admin_chat'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Message sent! 🌍', 'success');
+            messageInput.value = '';
+            loadAdminMessages(); // Refresh messages
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+
+function sendQuickAdminMessage(title, content) {
+    const quickMessage = `${title}: ${content}`;
+    
+    fetch('/api/admin/send-admin-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: quickMessage,
+            message_type: 'admin_system'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`${title} sent! 🌍`, 'success');
+            loadAdminMessages(); // Refresh messages
+        } else {
+            showNotification('Failed to send message: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending quick message:', error);
+        showNotification('Error sending message', 'error');
+    });
+}
+
+function startAdminChatPolling() {
+    // Poll for new messages every 5 seconds
+    window.adminChatInterval = setInterval(() => {
+        if (document.getElementById('admin-chat-modal')) {
+            loadAdminChatData();
+            loadDirectMessageData();
+        }
+    }, 5000);
+}
+
+// Translation Manager System
+function openTranslationManager() {
+    console.log(' Opening Translation Manager...');
+    
+    // Create translation manager modal
+    const modal = document.createElement('div');
+    modal.id = 'translation-manager-modal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl max-w-6xl w-full mx-4 h-[700px] flex flex-col gothic-border">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-600/20 flex items-center justify-center border border-yellow-600/50">
+                        <i class="ri-translate-2-line text-xl text-yellow-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white"> Translation Manager</h3>
+                        <p class="text-sm text-gray-400">Review user submissions and manage translations</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Pending Reviews</p>
+                        <p class="text-yellow-400 font-bold" id="pending-count">Loading...</p>
+                    </div>
+                    <button onclick="closeTranslationManager()" class="text-gray-400 hover:text-white">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-gray-700 bg-gray-900/30">
+                <button onclick="switchTranslationTab('pending')" id="pending-tab" 
+                        class="flex-1 px-4 py-3 text-sm font-semibold text-yellow-400 border-b-2 border-yellow-400 bg-gray-800/50">
+                    <i class="ri-time-line mr-2"></i>Pending Review
+                </button>
+                <button onclick="switchTranslationTab('all')" id="all-tab" 
+                        class="flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600">
+                    <i class="ri-list-check mr-2"></i>All Submissions
+                </button>
+                <button onclick="switchTranslationTab('cache')" id="cache-tab" 
+                        class="flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600">
+                    <i class="ri-database-2-line mr-2"></i>Translation Cache
+                </button>
+                <button onclick="switchTranslationTab('add')" id="add-tab" 
+                        class="flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600">
+                    <i class="ri-add-line mr-2"></i>Add Custom
+                </button>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="flex-1 overflow-hidden">
+                <!-- Pending Submissions Tab -->
+                <div id="pending-tab-content" class="h-full p-4 overflow-y-auto">
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="ri-loader-line animate-spin text-4xl mb-2"></i>
+                        <p>Loading pending submissions...</p>
+                    </div>
+                </div>
+                
+                <!-- All Submissions Tab -->
+                <div id="all-tab-content" class="h-full p-4 overflow-y-auto" style="display: none;">
+                    <div class="mb-4 flex gap-2">
+                        <select id="status-filter" class="bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <button onclick="filterSubmissions()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded">
+                            Filter
+                        </button>
+                    </div>
+                    <div id="all-submissions-content">
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="ri-loader-line animate-spin text-4xl mb-2"></i>
+                            <p>Loading all submissions...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Translation Cache Tab -->
+                <div id="cache-tab-content" class="h-full p-4 overflow-y-auto" style="display: none;">
+                    <div class="mb-4 flex gap-2">
+                        <select id="language-filter" class="bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2">
+                            <option value="">All Languages</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ru">Russian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="zh">Chinese</option>
+                        </select>
+                        <button onclick="filterCache()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded">
+                            Filter
+                        </button>
+                    </div>
+                    <div id="cache-content">
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="ri-loader-line animate-spin text-4xl mb-2"></i>
+                            <p>Loading translation cache...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add Custom Tab -->
+                <div id="add-tab-content" class="h-full p-4 overflow-y-auto" style="display: none;">
+                    <div class="max-w-2xl mx-auto">
+                        <h4 class="text-lg font-semibold text-white mb-4">Add Custom Translation</h4>
+                        <form id="custom-translation-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Original Text</label>
+                                <textarea id="custom-original" class="w-full bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 h-20" 
+                                          placeholder="Enter original text..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Translation</label>
+                                <textarea id="custom-translation" class="w-full bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 h-20" 
+                                          placeholder="Enter translation..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Target Language</label>
+                                <select id="custom-language" class="w-full bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2">
+                                    <option value="">Select language...</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="it">Italian</option>
+                                    <option value="pt">Portuguese</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="zh">Chinese</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" id="apply-to-cache" checked class="rounded">
+                                <label for="apply-to-cache" class="text-sm text-gray-300">Apply to cache immediately</label>
+                            </div>
+                            <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded">
+                                Add Translation
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Initialize translation manager
+    loadTranslationManagerData();
+    
+    // Set up form handler
+    document.getElementById('custom-translation-form').addEventListener('submit', handleCustomTranslationSubmit);
+}
+
+// Tab switching for translation manager
+let currentTranslationTab = 'pending';
+
+function switchTranslationTab(tab) {
+    currentTranslationTab = tab;
+    
+    // Update tab buttons
+    const tabs = ['pending', 'all', 'cache', 'add'];
+    tabs.forEach(tabName => {
+        const tabButton = document.getElementById(`${tabName}-tab`);
+        const tabContent = document.getElementById(`${tabName}-tab-content`);
+        
+        if (tabName === tab) {
+            tabButton.className = 'flex-1 px-4 py-3 text-sm font-semibold text-yellow-400 border-b-2 border-yellow-400 bg-gray-800/50';
+            tabContent.style.display = 'block';
+        } else {
+            tabButton.className = 'flex-1 px-4 py-3 text-sm font-semibold text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-600';
+            tabContent.style.display = 'none';
+        }
+    });
+    
+    // Load appropriate data
+    loadTranslationTabData(tab);
+}
+
+function loadTranslationManagerData() {
+    // Load pending submissions by default
+    loadPendingSubmissions();
+    
+    // Update pending count in dashboard
+    updatePendingTranslationsBadge();
+}
+
+function loadPendingSubmissions() {
+    fetch('/api/admin/translations/pending')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderPendingSubmissions(data.submissions);
+                document.getElementById('pending-count').textContent = data.count;
+            } else {
+                document.getElementById('pending-tab-content').innerHTML = `
+                    <div class="text-center text-red-400 py-8">
+                        <i class="ri-error-warning-line text-4xl mb-2"></i>
+                        <p>Error loading pending submissions</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading pending submissions:', error);
+        });
+}
+
+function renderPendingSubmissions(submissions) {
+    const content = document.getElementById('pending-tab-content');
+    
+    if (submissions.length === 0) {
+        content.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                <i class="ri-check-double-line text-4xl mb-2 text-green-400"></i>
+                <p class="text-white font-semibold">No pending submissions!</p>
+                <p class="text-sm">All translations have been reviewed</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    submissions.forEach(submission => {
+        html += `
+            <div class="bg-gray-900/50 rounded-lg p-4 mb-4 border border-yellow-600/30">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-yellow-600/20 flex items-center justify-center">
+                            <i class="ri-user-line text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold">${submission.username}</p>
+                            <p class="text-xs text-gray-400">${submission.target_language.toUpperCase()}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-400">${new Date(submission.submitted_at).toLocaleDateString()}</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Original:</p>
+                        <p class="text-white bg-gray-800/50 p-2 rounded">${submission.original_text}</p>
+                    </div>
+                    
+                    ${submission.current_translation ? `
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Current Translation:</p>
+                            <p class="text-red-300 bg-gray-800/50 p-2 rounded">${submission.current_translation}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Suggested Translation:</p>
+                        <p class="text-green-300 bg-gray-800/50 p-2 rounded">${submission.suggested_translation}</p>
+                    </div>
+                    
+                    ${submission.context ? `
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Context:</p>
+                            <p class="text-gray-300 bg-gray-800/50 p-2 rounded text-sm">${submission.context}</p>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="approveTranslation(${submission.id})" 
+                            class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors">
+                        <i class="ri-check-line mr-2"></i>Approve
+                    </button>
+                    <button onclick="rejectTranslation(${submission.id})" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors">
+                        <i class="ri-close-line mr-2"></i>Reject
+                    </button>
+                    <button onclick="reviewTranslation(${submission.id})" 
+                            class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded transition-colors">
+                        <i class="ri-eye-line"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    content.innerHTML = html;
+}
+
+function approveTranslation(submissionId) {
+    if (confirm('Approve this translation and add it to the cache?')) {
+        fetch(`/api/admin/translations/approve/${submissionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                admin_notes: 'Approved via Translation Manager',
+                apply_to_cache: true
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Translation approved and added to cache! ', 'success');
+                loadPendingSubmissions();
+                updatePendingTranslationsBadge();
+            } else {
+                showNotification('Error approving translation: ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error approving translation:', error);
+            showNotification('Error approving translation', 'error');
+        });
+    }
+}
+
+function rejectTranslation(submissionId) {
+    const reason = prompt('Reason for rejection (optional):');
+    if (reason !== null) {
+        fetch(`/api/admin/translations/reject/${submissionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                reason: reason
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Translation rejected ', 'info');
+                loadPendingSubmissions();
+                updatePendingTranslationsBadge();
+            } else {
+                showNotification('Error rejecting translation: ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error rejecting translation:', error);
+            showNotification('Error rejecting translation', 'error');
+        });
+    }
+}
+
+function handleCustomTranslationSubmit(event) {
+    event.preventDefault();
+    
+    const originalText = document.getElementById('custom-original').value.trim();
+    const translation = document.getElementById('custom-translation').value.trim();
+    const targetLanguage = document.getElementById('custom-language').value;
+    const applyToCache = document.getElementById('apply-to-cache').checked;
+    
+    if (!originalText || !translation || !targetLanguage) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    fetch('/api/admin/translations/add-custom', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            original_text: originalText,
+            translation: translation,
+            target_language: targetLanguage,
+            apply_to_cache: applyToCache
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Custom translation added successfully! ', 'success');
+            document.getElementById('custom-translation-form').reset();
+            document.getElementById('apply-to-cache').checked = true;
+        } else {
+            showNotification('Error adding translation: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error adding custom translation:', error);
+        showNotification('Error adding translation', 'error');
+    });
+}
+
+function loadTranslationTabData(tab) {
+    switch(tab) {
+        case 'pending':
+            loadPendingSubmissions();
+            break;
+        case 'all':
+            loadAllSubmissions();
+            break;
+        case 'cache':
+            loadTranslationCache();
+            break;
+        // 'add' tab doesn't need data loading
+    }
+}
+
+function loadAllSubmissions() {
+    fetch('/api/admin/translations/all')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderAllSubmissions(data.submissions);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading all submissions:', error);
+        });
+}
+
+function loadTranslationCache() {
+    fetch('/api/admin/translations/cache')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderTranslationCache(data.translations);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading translation cache:', error);
+        });
+}
+
+function renderAllSubmissions(submissions) {
+    const content = document.getElementById('all-submissions-content');
+    
+    if (submissions.length === 0) {
+        content.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                <i class="ri-inbox-line text-4xl mb-2"></i>
+                <p>No submissions found</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    submissions.forEach(submission => {
+        const statusColor = submission.status === 'approved' ? 'text-green-400' : 
+                          submission.status === 'rejected' ? 'text-red-400' : 'text-yellow-400';
+        
+        html += `
+            <div class="bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-600/30">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gray-600/20 flex items-center justify-center">
+                            <i class="ri-user-line text-gray-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold">${submission.username}</p>
+                            <p class="text-xs text-gray-400">${submission.target_language.toUpperCase()}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs ${statusColor} font-semibold">${submission.status.toUpperCase()}</span>
+                </div>
+                
+                <div class="space-y-2">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Original:</p>
+                        <p class="text-white bg-gray-800/50 p-2 rounded text-sm">${submission.original_text}</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Suggested:</p>
+                        <p class="text-green-300 bg-gray-800/50 p-2 rounded text-sm">${submission.suggested_translation}</p>
+                    </div>
+                    
+                    ${submission.admin_notes ? `
+                        <div>
+                            <p class="text-sm text-gray-400 mb-1">Admin Notes:</p>
+                            <p class="text-gray-300 bg-gray-800/50 p-2 rounded text-sm">${submission.admin_notes}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    content.innerHTML = html;
+}
+
+function renderTranslationCache(translations) {
+    const content = document.getElementById('cache-content');
+    
+    if (translations.length === 0) {
+        content.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                <i class="ri-database-line text-4xl mb-2"></i>
+                <p>No cached translations found</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    translations.forEach(translation => {
+        html += `
+            <div class="bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-600/30">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-purple-600/20 flex items-center justify-center">
+                            <i class="ri-translate-line text-purple-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold">${translation.source_language.toUpperCase()} → ${translation.target_language.toUpperCase()}</p>
+                            <p class="text-xs text-gray-400">Confidence: ${(translation.confidence * 100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                    <button onclick="removeCachedTranslation(${translation.id})" 
+                            class="text-red-400 hover:text-red-300 text-sm">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-2">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Original:</p>
+                        <p class="text-white bg-gray-800/50 p-2 rounded text-sm">${translation.original_text}</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Translation:</p>
+                        <p class="text-green-300 bg-gray-800/50 p-2 rounded text-sm">${translation.translated_text}</p>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 text-xs text-gray-400">
+                        <span>Used: ${translation.times_used || 0} times</span>
+                        <span>Created: ${new Date(translation.created_at).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    content.innerHTML = html;
+}
+
+function removeCachedTranslation(cacheId) {
+    if (confirm('Remove this translation from cache?')) {
+        fetch(`/api/admin/translations/cache/${cacheId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Translation removed from cache', 'info');
+                loadTranslationCache();
+            } else {
+                showNotification('Error removing translation: ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error removing translation:', error);
+            showNotification('Error removing translation', 'error');
+        });
+    }
+}
+
+function updatePendingTranslationsBadge() {
+    fetch('/api/admin/translations/pending')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const badge = document.getElementById('pending-translations-badge');
+                if (data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.style.display = 'flex';
+                    
+                    // Add pulse animation for attention
+                    const button = document.getElementById('translation-manager-btn');
+                    button.classList.add('animate-pulse');
+                } else {
+                    badge.style.display = 'none';
+                    
+                    // Remove pulse animation
+                    const button = document.getElementById('translation-manager-btn');
+                    button.classList.remove('animate-pulse');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error updating pending translations badge:', error);
+        });
+}
+
+function closeTranslationManager() {
+    const modal = document.getElementById('translation-manager-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Poll for pending translations every 30 seconds
+setInterval(updatePendingTranslationsBadge, 30000);
+
+// Initialize pending translations badge on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updatePendingTranslationsBadge();
+});
+
+// Analytics Dashboard System
+function loadAnalytics() {
+    console.log('📊 Loading UniBabel Analytics...');
+    
+    // Create comprehensive analytics modal
+    const modal = document.createElement('div');
+    modal.id = 'analytics-modal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl max-w-6xl w-full mx-4 h-[700px] flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <h3 class="text-xl font-bold text-white">📊 UniBabel Analytics Dashboard</h3>
+                <div class="flex items-center gap-2">
+                    <select id="analytics-period" class="bg-gray-900/50 text-white border border-gray-600 rounded px-3 py-2 text-sm">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                    <button onclick="refreshAnalytics()" class="text-gray-400 hover:text-white p-2">
+                        <i class="ri-refresh-line"></i>
+                    </button>
+                    <button onclick="closeAnalytics()" class="text-gray-400 hover:text-white">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Overview Cards -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <div class="text-sm text-gray-400">Total Users</div>
+                        <div class="text-2xl font-bold text-white" id="total-users">-</div>
+                        <div class="text-xs text-green-400" id="user-growth">+0%</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <div class="text-sm text-gray-400">Messages</div>
+                        <div class="text-2xl font-bold text-white" id="total-messages">-</div>
+                        <div class="text-xs text-blue-400" id="messages-per-user">0/user</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <div class="text-sm text-gray-400">Translations</div>
+                        <div class="text-2xl font-bold text-white" id="total-translations">-</div>
+                        <div class="text-xs text-purple-400" id="translation-rate">0%</div>
+                    </div>
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <div class="text-sm text-gray-400">Cache Hit Rate</div>
+                        <div class="text-2xl font-bold text-white" id="cache-hit-rate">-</div>
+                        <div class="text-xs text-green-400" id="cache-efficiency">Excellent</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="flex-1 p-4 overflow-y-auto">
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- User Growth -->
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <h4 class="text-white font-semibold mb-3">User Growth</h4>
+                        <div id="user-growth-chart" class="h-32">Loading...</div>
+                    </div>
+                    
+                    <!-- Message Volume -->
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <h4 class="text-white font-semibold mb-3">Message Volume</h4>
+                        <div id="message-volume-chart" class="h-32">Loading...</div>
+                    </div>
+                    
+                    <!-- Top Languages -->
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <h4 class="text-white font-semibold mb-3">Top Languages</h4>
+                        <div id="language-chart" class="h-32 overflow-y-auto">Loading...</div>
+                    </div>
+                    
+                    <!-- Platform Health -->
+                    <div class="bg-gray-900/50 rounded p-4">
+                        <h4 class="text-white font-semibold mb-3">Platform Health</h4>
+                        <div id="health-status" class="h-32">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-4 border-t border-gray-700 flex justify-between items-center">
+                <span class="text-sm text-gray-400">Last updated: <span id="last-updated">-</span></span>
+                <div class="flex gap-2">
+                    <button onclick="exportAnalytics('json')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">
+                        Export JSON
+                    </button>
+                    <button onclick="exportAnalytics('csv')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm">
+                        Export CSV
+                    </button>
+                    <button onclick="closeAnalytics()" class="px-3 py-2 border border-gray-600 rounded text-gray-400 hover:text-white text-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    loadAnalyticsData();
+    
+    // Set up period change handler
+    document.getElementById('analytics-period').addEventListener('change', loadAnalyticsData);
+}
+
+function loadAnalyticsData() {
+    const period = document.getElementById('analytics-period').value;
+    
+    fetch(`/api/admin/analytics/overview?days=${period}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateAnalyticsDisplay(data.data);
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+            } else {
+                showNotification('Error loading analytics', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Analytics error:', error);
+            showNotification('Error loading analytics', 'error');
+        });
+}
+
+function updateAnalyticsDisplay(data) {
+    const overview = data.overview || {};
+    const users = data.users || {};
+    const messages = data.messages || {};
+    const languages = data.languages || {};
+    const health = data.health || {};
+    
+    // Update overview cards
+    document.getElementById('total-users').textContent = (overview.total_users || 0).toLocaleString();
+    document.getElementById('user-growth').textContent = users.growth_rate ? `+${users.growth_rate}%` : '+0%';
+    
+    document.getElementById('total-messages').textContent = (overview.total_messages || 0).toLocaleString();
+    document.getElementById('messages-per-user').textContent = `${overview.messages_per_user || 0}/user`;
+    
+    document.getElementById('total-translations').textContent = (overview.total_translations || 0).toLocaleString();
+    document.getElementById('translation-rate').textContent = `${messages.translation_rate || 0}%`;
+    
+    document.getElementById('cache-hit-rate').textContent = `${messages.cache_hit_rate || 0}%`;
+    const cacheRate = messages.cache_hit_rate || 0;
+    const efficiencyEl = document.getElementById('cache-efficiency');
+    if (cacheRate >= 80) {
+        efficiencyEl.textContent = 'Excellent';
+        efficiencyEl.className = 'text-xs text-green-400';
+    } else if (cacheRate >= 60) {
+        efficiencyEl.textContent = 'Good';
+        efficiencyEl.className = 'text-xs text-blue-400';
+    } else {
+        efficiencyEl.textContent = 'Needs Work';
+        efficiencyEl.className = 'text-xs text-yellow-400';
+    }
+    
+    // Update charts
+    updateUserGrowthChart(users.daily_registrations || []);
+    updateMessageVolumeChart(messages.daily_volume || []);
+    updateLanguageChart(languages.user_languages || []);
+    updateHealthStatus(health);
+}
+
+function updateUserGrowthChart(dailyRegs) {
+    const chartEl = document.getElementById('user-growth-chart');
+    if (dailyRegs.length === 0) {
+        chartEl.innerHTML = '<div class="text-center text-gray-400 py-8">No data</div>';
+        return;
+    }
+    
+    const maxCount = Math.max(...dailyRegs.map(d => d.count));
+    chartEl.innerHTML = `
+        <div class="space-y-1">
+            ${dailyRegs.slice(-7).map(day => `
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-400 w-12">${new Date(day.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</span>
+                    <div class="flex-1 bg-gray-700 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full" style="width: ${(day.count / Math.max(maxCount, 1)) * 100}%"></div>
+                    </div>
+                    <span class="text-xs text-white w-6">${day.count}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function updateMessageVolumeChart(dailyVolume) {
+    const chartEl = document.getElementById('message-volume-chart');
+    if (dailyVolume.length === 0) {
+        chartEl.innerHTML = '<div class="text-center text-gray-400 py-8">No data</div>';
+        return;
+    }
+    
+    const maxCount = Math.max(...dailyVolume.map(d => d.count));
+    chartEl.innerHTML = `
+        <div class="space-y-1">
+            ${dailyVolume.slice(-7).map(day => `
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-400 w-12">${new Date(day.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</span>
+                    <div class="flex-1 bg-gray-700 rounded-full h-2">
+                        <div class="bg-green-500 h-2 rounded-full" style="width: ${(day.count / Math.max(maxCount, 1)) * 100}%"></div>
+                    </div>
+                    <span class="text-xs text-white w-8">${day.count}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function updateLanguageChart(userLangs) {
+    const chartEl = document.getElementById('language-chart');
+    if (userLangs.length === 0) {
+        chartEl.innerHTML = '<div class="text-center text-gray-400 py-8">No data</div>';
+        return;
+    }
+    
+    const maxCount = userLangs[0]?.count || 1;
+    chartEl.innerHTML = `
+        <div class="space-y-1">
+            ${userLangs.slice(0, 6).map(lang => `
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-400 w-8 uppercase">${lang.lang}</span>
+                    <div class="flex-1 bg-gray-700 rounded-full h-2">
+                        <div class="bg-yellow-500 h-2 rounded-full" style="width: ${(lang.count / maxCount) * 100}%"></div>
+                    </div>
+                    <span class="text-xs text-white w-8">${lang.count}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function updateHealthStatus(health) {
+    const healthEl = document.getElementById('health-status');
+    const status = health.system_status || {};
+    
+    healthEl.innerHTML = `
+        <div class="space-y-2">
+            ${Object.entries(status).map(([service, state]) => `
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-400 capitalize">${service.replace('_', ' ')}</span>
+                    <span class="text-xs px-2 py-1 rounded ${state === 'healthy' ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400'}">
+                        ${state.toUpperCase()}
+                    </span>
+                </div>
+            `).join('')}
+            <div class="pt-2 border-t border-gray-600">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-400">24h Activity</span>
+                    <span class="text-white font-semibold">${health.recent_activity?.translations_24h || 0}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function refreshAnalytics() {
+    showNotification('Refreshing analytics...', 'info');
+    loadAnalyticsData();
+}
+
+function exportAnalytics(format) {
+    const period = document.getElementById('analytics-period').value;
+    
+    fetch(`/api/admin/analytics/overview?days=${period}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const blob = new Blob([JSON.stringify(data.data, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `unibabel-analytics-${period}days-${new Date().toISOString().split('T')[0]}.${format}`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showNotification(`Analytics exported as ${format.toUpperCase()}`, 'success');
+            }
+        })
+        .catch(error => {
+            showNotification('Export failed', 'error');
+        });
+}
+
+function closeAnalytics() {
+    const modal = document.getElementById('analytics-modal');
+    if (modal) modal.remove();
+}
+
+</script>

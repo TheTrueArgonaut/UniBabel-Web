@@ -1,0 +1,28 @@
+<!-- Rooms Header Component -->
+<div class="bg-secondary border-b border-gray-700 p-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <a href="/chat" class="text-gray-400 hover:text-white">
+                <i class="ri-arrow-left-line text-xl"></i>
+            </a>
+            <h1 class="text-2xl font-bold text-primary">My Rooms</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button id="createRoomBtn"
+                    class="bg-primary hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition-colors">
+                <i class="ri-add-line mr-2"></i>
+                Create Room
+            </button>
+            <button id="joinRoomBtn"
+                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-semibold transition-colors">
+                <i class="ri-key-line mr-2"></i>
+                Join with Code
+            </button>
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
+                {{ current_user.display_name[0] if current_user.display_name else
+                current_user.username[0] }}
+            </div>
+        </div>
+    </div>
+</div>

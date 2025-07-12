@@ -1,0 +1,21 @@
+<!-- 📝 BABEL POST CREATOR MICROSERVICE -->
+<!-- SRIMI Compliant: Single Responsibility - Post creation interface -->
+<div class="post-creation">
+    <div class="post-types">
+        <button class="post-type-btn active" data-type="text">💬 General</button>
+        <button class="post-type-btn" data-type="looking_for">🔍 Looking For</button>
+        <button class="post-type-btn" data-type="topic">💡 Topic</button>
+        <button class="post-type-btn" data-type="language">🌍 Language</button>
+        <button class="post-type-btn" data-type="mood">😊 Mood</button>
+    </div>
+
+    <textarea id="postContent" class="post-input"
+              placeholder="What's happening? Share your thoughts, find chat partners, or start a discussion..."></textarea>
+
+    <div class="post-actions">
+        <div class="char-counter">
+            <span id="charCount">0</span>/500
+        </div>
+        <button id="postBtn" class="post-btn">Babel It!</button>
+    </div>
+</div>

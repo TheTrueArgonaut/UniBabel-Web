@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - UniBabel</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet">
+
+    <!-- Settings Styles Component -->
+    {% include 'components/settings_styles.html' %}
+</head>
+<body>
+
+<!-- Settings Header Component -->
+{% include 'components/settings_header.html' %}
+
+    <main id="main-content" role="main">
+        <!-- Settings Accessibility Component -->
+        {% include 'components/settings_accessibility.html' %}
+
+        <!-- Settings Language Component -->
+        {% include 'components/settings_language.html' %}
+
+        <!-- Settings Privacy Component -->
+        {% include 'components/settings_privacy.html' %}
+
+        <!-- Settings Notifications Component -->
+        {% include 'components/settings_notifications.html' %}
+
+        <!-- Settings Account Component -->
+        {% include 'components/settings_account.html' %}
+
+        <!-- Settings Premium Component -->
+        {% include 'components/settings_premium.html' %}
+
+        <!-- Settings Footer Component -->
+        {% include 'components/settings_footer.html' %}
+    </main>
+
+    <!-- Settings Scripts Component -->
+    {% include 'components/settings_scripts.html' %}
+
+</body>
+</html>

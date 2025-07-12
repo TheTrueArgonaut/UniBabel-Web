@@ -1,0 +1,136 @@
+<!-- 👤 PROFILE SIDEBAR MICROSERVICE -->
+<div class="sidebar-component">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ current_user.display_name[0] if current_user.display_name else
+            current_user.username[0] }}
+        </div>
+        <div class="profile-name">{{ current_user.display_name or current_user.username }}</div>
+        <div class="profile-username">@{{ current_user.username }}</div>
+        <div class="profile-bio">
+            {{ current_user.bio or "Welcome to UniBabel! Update your bio to tell others about
+            yourself." }}
+        </div>
+    </div>
+
+    <div class="profile-details">
+        <div class="detail-item">
+            <span class="detail-icon">🌐</span>
+            <span>{{ current_user.preferred_language.upper() }}</span>
+        </div>
+    </div>
+
+    <div class="privacy-toggle">
+        <div class="privacy-switch">
+            <span>{{ "Public Profile" if current_user.is_discoverable else "Private Profile" }}</span>
+            <div class="switch {{ 'active' if current_user.is_discoverable else '' }}"
+                 onclick="togglePrivacy(this)"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sidebar-component {
+        width: 280px;
+        background: var(--profile-bg-secondary);
+        border-right: 1px solid var(--profile-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .profile-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--profile-border);
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--profile-bg-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+
+    .profile-name {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .profile-username {
+        color: var(--profile-text-muted);
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .profile-bio {
+        color: var(--profile-text-secondary);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .profile-details {
+        padding: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
+
+    .detail-icon {
+        width: 16px;
+        text-align: center;
+    }
+
+    .privacy-toggle {
+        padding: 20px;
+        border-top: 1px solid var(--profile-border);
+        margin-top: auto;
+    }
+
+    .privacy-switch {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+    }
+
+    .switch {
+        width: 40px;
+        height: 20px;
+        background: var(--profile-bg-tertiary);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .switch.active {
+        background: var(--profile-hover);
+    }
+
+    .switch::before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s ease;
+    }
+
+    .switch.active::before {
+        transform: translateX(20px);
+    }
+</style>

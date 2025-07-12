@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Trending Rooms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+<h1 class="text-2xl mb-4">Test Trending Rooms API</h1>
+<button onclick="testAPI()" class="bg-blue-500 px-4 py-2 rounded">Test API</button>
+<div id="results" class="mt-4"></div>
+
+<script>
+
+    async function testAPI() {
+        try {
+            const response = await fetch('/api/rooms/trending');
+            const data = await response.json();
+            document.getElementById('results').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        } catch (error) {
+            document.getElementById('results').innerHTML = 'Error: ' + error.message;
+        }
+
+}
+</script>
+</body>
+</html>

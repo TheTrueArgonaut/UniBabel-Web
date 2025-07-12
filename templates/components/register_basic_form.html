@@ -1,0 +1,278 @@
+<!-- 📝 REGISTER BASIC FORM MICROSERVICE - Enhanced UX -->
+<!-- First Row: Username + Display Name -->
+<div class="form-grid">
+    <div class="form-group">
+        <label class="form-label">Username</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-user-line"></i>
+            </div>
+            <input type="text"
+                   id="username"
+                   name="username"
+                   required
+                   maxlength="20"
+                   class="form-input"
+                   placeholder="Choose username"
+                   autocomplete="username"/>
+            <div class="validation-icon" id="username-icon">
+                <i class="ri-loader-4-line animate-spin hidden" id="username-loading"></i>
+                <i class="ri-check-line text-green-400 hidden" id="username-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="username-error"></i>
+            </div>
+        </div>
+        <div id="username-feedback" class="feedback"></div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-user-3-line"></i>
+            </div>
+            <input type="text"
+                   id="display_name"
+                   name="display_name"
+                   required
+                   maxlength="30"
+                   class="form-input"
+                   placeholder="Your display name"
+                   autocomplete="name"/>
+            <div class="validation-icon" id="display-name-icon">
+                <i class="ri-check-line text-green-400 hidden" id="display-name-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="display-name-error"></i>
+            </div>
+        </div>
+        <div id="display-name-feedback" class="feedback"></div>
+    </div>
+</div>
+
+<!-- Second Row: Language + Email -->
+<div class="form-grid">
+    <!-- LANGUAGE SELECTION MICROSERVICE -->
+    {% include 'components/language_selection.html' %}
+
+    <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-mail-line"></i>
+            </div>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   required
+                   class="form-input"
+                   placeholder="Enter your email"
+                   autocomplete="email"/>
+            <div class="validation-icon" id="email-icon">
+                <i class="ri-loader-4-line animate-spin hidden" id="email-loading"></i>
+                <i class="ri-check-line text-green-400 hidden" id="email-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="email-error"></i>
+            </div>
+        </div>
+        <div id="email-feedback" class="feedback"></div>
+    </div>
+</div>
+
+<!-- Third Row: Password + Confirm Password -->
+<div class="form-grid">
+    <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-lock-line"></i>
+            </div>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   required
+                   minlength="8"
+                   class="form-input"
+                   placeholder="Create password"
+                   autocomplete="new-password"/>
+            <button type="button"
+                    class="password-toggle"
+                    onclick="togglePassword('password', this)"
+                    aria-label="Toggle password visibility">
+                <i class="ri-eye-line text-gray-400"></i>
+            </button>
+            <div class="validation-icon password-validation" id="password-icon">
+                <i class="ri-check-line text-green-400 hidden" id="password-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="password-error"></i>
+            </div>
+        </div>
+        <div id="password-feedback" class="feedback"></div>
+
+        <!-- Password Strength Indicator -->
+        <div class="password-strength-container" id="password-strength-container"
+             style="display: none;">
+            <div class="password-strength-bar">
+                <div class="password-strength-fill" id="password-strength-fill"></div>
+            </div>
+            <div class="password-strength-text" id="password-strength-text">Password strength</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <div class="relative">
+            <div class="input-icon">
+                <i class="ri-lock-line"></i>
+            </div>
+            <input type="password"
+                   id="confirm_password"
+                   name="confirm_password"
+                   required
+                   class="form-input"
+                   placeholder="Confirm password"
+                   autocomplete="new-password"/>
+            <button type="button"
+                    class="password-toggle"
+                    onclick="togglePassword('confirm_password', this)"
+                    aria-label="Toggle confirm password visibility">
+                <i class="ri-eye-line text-gray-400"></i>
+            </button>
+            <div class="validation-icon password-validation" id="confirm-password-icon">
+                <i class="ri-check-line text-green-400 hidden" id="confirm-password-success"></i>
+                <i class="ri-close-line text-red-400 hidden" id="confirm-password-error"></i>
+            </div>
+        </div>
+        <div id="confirm-password-feedback" class="feedback"></div>
+    </div>
+</div>
+
+<style>
+    .validation-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+
+    .password-validation {
+        right: 48px; /* Account for password toggle button */
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .password-toggle:hover {
+        background-color: rgba(75, 85, 99, 0.3);
+    }
+
+    .password-toggle:focus {
+        outline: none;
+        ring: 2px solid #dc2626;
+        ring-offset: 2px;
+    }
+
+    /* Form Input States */
+    .form-input.valid {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-input.invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-input.checking {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Form Select States */
+    .form-select.valid {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-select.invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* Password Strength */
+    .password-strength-container {
+        margin-top: 8px;
+    }
+
+    .password-strength-bar {
+        width: 100%;
+        height: 4px;
+        background-color: #374151;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 4px;
+    }
+
+    .password-strength-fill {
+        height: 100%;
+        width: 0%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .password-strength-fill.weak {
+        width: 25%;
+        background-color: #ef4444;
+    }
+
+    .password-strength-fill.fair {
+        width: 50%;
+        background-color: #f59e0b;
+    }
+
+    .password-strength-fill.good {
+        width: 75%;
+        background-color: #3b82f6;
+    }
+
+    .password-strength-fill.strong {
+        width: 100%;
+        background-color: #10b981;
+    }
+
+    .password-strength-text {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        text-align: center;
+    }
+
+    /* Feedback Messages */
+    .feedback {
+        margin-top: 4px;
+        font-size: 0.75rem;
+        min-height: 16px;
+    }
+
+    .feedback.success {
+        color: #10b981;
+    }
+
+    .feedback.error {
+        color: #ef4444;
+    }
+
+    .feedback.warning {
+        color: #f59e0b;
+    }
+
+    .feedback.checking {
+        color: #3b82f6;
+    }
+</style>

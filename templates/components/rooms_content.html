@@ -1,0 +1,52 @@
+<!-- Rooms Content Component -->
+<div class="max-w-7xl mx-auto p-6">
+    <!-- Pending Invitations -->
+    <div id="pendingInvitesSection" class="mb-8 hidden">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+            <i class="ri-mail-line text-yellow-500 mr-2"></i>
+            Pending Invitations
+            <span id="inviteCount"
+                  class="ml-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded-full">0</span>
+        </h2>
+        <div id="pending-invites" class="space-y-3">
+            <!-- Pending invitations will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Trending Rooms -->
+    <div id="trendingRoomsSection" class="mb-8">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+            <i class="ri-fire-line text-orange-500 mr-2"></i>
+            Trending Rooms
+            <span class="ml-2 text-xs text-gray-400">Public rooms gaining popularity</span>
+        </h2>
+        <div id="trending-rooms" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Trending rooms will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Discoverable Rooms -->
+    <div id="discoverableRoomsSection" class="mb-8">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+            <i class="ri-compass-line text-blue-500 mr-2"></i>
+            Discover Rooms
+            <span class="ml-2 text-xs text-gray-400">Public rooms you can join</span>
+        </h2>
+        <div id="discoverable-rooms" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Discoverable rooms will be loaded here -->
+        </div>
+    </div>
+
+    <!-- My Rooms -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+            <i class="ri-home-line text-primary mr-2"></i>
+            My Rooms
+            <span id="roomCount"
+                  class="ml-2 bg-primary text-white text-xs px-2 py-1 rounded-full">0</span>
+        </h2>
+        <div id="my-rooms" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- User's rooms will be loaded here -->
+        </div>
+    </div>
+</div>

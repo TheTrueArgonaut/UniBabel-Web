@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🧛‍♂️ UniBabel Admin - Data Management</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet"/>
+
+    {% include 'components/admin/styles.html' %}
+</head>
+<body class="bg-gray-900 min-h-screen">
+{% include 'components/admin/header.html' %}
+
+<main class="p-6">
+        {% include 'components/admin/dashboard_overview.html' %}
+        {% include 'components/admin/quick_actions.html' %}
+        {% include 'components/admin/data_display.html' %}
+        {% include 'components/admin/bot_controls.html' %}
+        {% include 'components/admin/reports.html' %}
+        {% include 'components/admin/system_status.html' %}
+    </main>
+
+    {% include 'components/admin/scripts/core.html' %}
+    {% include 'components/admin/scripts/warehouse.html' %}
+    {% include 'components/admin/scripts/utils.html' %}
+</body>
+</html>

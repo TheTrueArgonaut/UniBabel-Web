@@ -1,0 +1,17 @@
+<!-- 🎯 ID UPLOAD AREA MICROSERVICE - Single Responsibility: File upload interface -->
+<div class="id-upload-area" id="id-upload-area">
+    <input type="file"
+           id="id_document"
+           name="id_document"
+           accept="image/*,.pdf"
+           class="hidden"/>
+
+    <!-- UPLOAD PLACEHOLDER MICROSERVICE -->
+    {% include 'components/upload_placeholder.html' %}
+
+    <!-- UPLOAD PREVIEW MICROSERVICE -->
+    {% include 'components/upload_preview.html' %}
+
+    <!-- UPLOAD PROCESSING MICROSERVICE -->
+    {% include 'components/upload_processing.html' %}
+</div>

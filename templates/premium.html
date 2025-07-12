@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>UniBabel Premium - Privacy Protection</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet"/>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#dc2626",
+                        secondary: "#1a1a1a",
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-gray-900 min-h-screen">
+<header class="sticky top-0 z-50 bg-[#0a0a0a] border-b border-gray-800">
+    <div class="w-full px-6 py-4">
+        <div class="flex items-center justify-between">
+            <a href="/dashboard">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-['Poppins','Helvetica','Arial',sans-serif] text-primary">
+                        UniBabel
+                    </h1>
+                </div>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="/premium"
+                   class="text-primary transition-colors flex items-center space-x-1">
+                    <i class="ri-vip-crown-line text-sm"></i>
+                    <span>Premium</span>
+                </a>
+                <a href="/chat" class="text-gray-300 hover:text-primary transition-colors">Chat</a>
+                <a href="/rooms"
+                   class="text-gray-300 hover:text-primary transition-colors">Rooms</a>
+                <a href="/babel"
+                   class="text-gray-300 hover:text-primary transition-colors">Babel</a>
+                <a href="/settings" class="text-gray-300 hover:text-primary transition-colors">Settings</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="/logout" class="hidden md:block">
+                    <button class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary transition-colors whitespace-nowrap">
+                        Logout
+                    </button>
+                </a>
+                <div class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                    <i class="ri-user-3-line text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-12">
+    <!-- Premium Header -->
+    <div class="mb-12">
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <i class="ri-vip-crown-line text-3xl text-primary"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2">UniBabel Premium</h2>
+                <p class="text-gray-400">Privacy protection, premium features, and VIP status</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Status -->
+    <div class="mb-12">
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <i class="ri-eye-line text-xl text-red-400"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Current Status: Free Account</h3>
+                    <p class="text-gray-400">Your data is being monetized to support free
+                        service</p>
+                </div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500 rounded-lg p-4">
+                <div class="flex items-start space-x-2">
+                    <i class="ri-information-line text-red-400 text-sm mt-0.5"></i>
+                    <div>
+                        <h5 class="text-red-300 font-medium text-sm">Data Collection Active</h5>
+                        <p class="text-red-200 text-xs mt-1">We collect conversation patterns,
+                            preferences, and usage data to generate revenue. Upgrade to Premium for
+                            complete privacy protection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Plans -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Privacy Premium -->
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 hover:border-primary/50 transition-all">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <i class="ri-shield-check-line text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Privacy Premium</h3>
+                <div class="text-4xl font-bold text-primary mb-2">$7.99<span
+                        class="text-lg text-gray-400">/month</span></div>
+                <p class="text-gray-400">Complete privacy protection</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">🛡️ Stop data collection and profiling</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">⭐ Premium star badge next to your name</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">🔝 Your rooms appear higher in discovery lists</span>
+                </div>
+                <div class="border-t border-gray-600 pt-4 mt-6">
+                    <h4 class="text-lg font-semibold text-gray-300 mb-3">What Stays Free:</h4>
+                    <div class="space-y-2 text-sm text-gray-400">
+                        <div>✅ Unlimited rooms and messages</div>
+                        <div>✅ Voice chat in rooms</div>
+                        <div>✅ Make rooms discoverable</div>
+                        <div>✅ File attachments and reactions</div>
+                        <div>✅ Universal translation</div>
+                        <div>✅ All core features</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="subscribeToPremium('privacy_premium')"
+                    class="w-full bg-primary hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors rounded-button">
+                Upgrade to Privacy Premium
+            </button>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 hover:border-blue-500/50 transition-all">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+                    <i class="ri-building-line text-2xl text-blue-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Enterprise</h3>
+                <div class="text-4xl font-bold text-blue-400 mb-2">$19.99<span
+                        class="text-lg text-gray-400">/month</span></div>
+                <p class="text-gray-400">For teams and businesses</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">All Privacy Premium features</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">Team management</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">Advanced analytics</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">Custom branding</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="ri-check-line text-green-400"></i>
+                    <span class="text-gray-300">API access</span>
+                </div>
+            </div>
+
+            <button onclick="subscribeToPremium('enterprise')"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors rounded-button">
+                Upgrade to Enterprise
+            </button>
+        </div>
+    </div>
+
+    <!-- Why Premium? -->
+    <div class="mb-12">
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50">
+            <h3 class="text-2xl font-bold text-white mb-6 text-center">Why Go Premium?</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-xl bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-shield-cross-line text-2xl text-red-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2">Stop Data Mining</h4>
+                    <p class="text-gray-400">Free accounts generate revenue through data collection
+                        and sales. Premium stops this completely.</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-xl bg-yellow-500/10 flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-star-line text-2xl text-yellow-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2">VIP Status</h4>
+                    <p class="text-gray-400">Premium star badge, priority room placement, and
+                        enhanced visibility in the community.</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-xl bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-rocket-line text-2xl text-green-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2">Better Experience</h4>
+                    <p class="text-gray-400">Faster translations, enhanced features, and priority
+                        support for the ultimate chat experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50">
+        <h3 class="text-2xl font-bold text-white mb-6 text-center">Frequently Asked Questions</h3>
+
+        <div class="space-y-6">
+            <div class="border-b border-gray-700 pb-4">
+                <h4 class="text-lg font-semibold text-white mb-2">What data do you collect from free
+                    users?</h4>
+                <p class="text-gray-400">Conversation patterns, language preferences, usage timing,
+                    and behavioral data to improve services and generate revenue through data
+                    sales.</p>
+            </div>
+
+            <div class="border-b border-gray-700 pb-4">
+                <h4 class="text-lg font-semibold text-white mb-2">How does the premium star
+                    work?</h4>
+                <p class="text-gray-400">Premium users get a star next to their name in chats and
+                    room
+                    lists, showing their VIP status to other users.</p>
+            </div>
+
+            <div class="border-b border-gray-700 pb-4">
+                <h4 class="text-lg font-semibold text-white mb-2">Can I cancel anytime?</h4>
+                <p class="text-gray-400">Yes, cancel anytime. Your premium benefits continue until
+                    the end of your billing period, then data collection resumes.</p>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-2">Is my payment secure?</h4>
+                <p class="text-gray-400">All payments are processed securely. We never store your
+                    payment information on our servers.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-black text-white py-8">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-400 text-sm">
+                &copy; 2025 Argonaut Digital Ventures LLC. All rights reserved.
+            </p>
+            <div class="flex space-x-6">
+                <a href="/settings"
+                   class="text-gray-400 hover:text-primary transition-colors text-sm">Settings</a>
+                <a href="/logout"
+                   class="text-gray-400 hover:text-primary transition-colors text-sm">Logout</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+
+async function subscribeToPremium(tier) {
+    try {
+        const response = await fetch('/api/subscription/privacy-premium', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tier: tier })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // In a real app, this would redirect to payment processor (Stripe, etc.)
+            alert(`🎉 ${tier} subscription created! Redirecting to payment...`);
+            // window.location.href = '/payment?subscription=' + result.subscription_id;
+        } else {
+            alert('❌ ' + (result.error || 'Subscription failed'));
+        }
+    } catch (error) {
+        alert('❌ Network error. Please try again.');
+    }
+}
+</script>
+</body>
+</html>

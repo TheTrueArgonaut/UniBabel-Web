@@ -1,0 +1,20 @@
+<!-- 🤖 BOT DETECTION ORCHESTRATOR - SRIMI: Single Responsibility for Component Assembly -->
+<div class="bot-detection-container">
+    <!-- Statistics Microservice -->
+    {% include 'components/admin/bot_detection/stats.html' %}
+
+    <!-- Controls Microservice -->
+    {% include 'components/admin/bot_detection/controls.html' %}
+
+    <!-- Emergency Microservice -->
+    {% include 'components/admin/bot_detection/emergency.html' %}
+
+    <!-- Activity Log Microservice -->
+    {% include 'components/admin/bot_detection/activity_log.html' %}
+</div>
+
+<!-- Shared Styles Microservice -->
+{% include 'components/admin/bot_detection/styles.html' %}
+
+<!-- Shared Scripts Microservice -->
+{% include 'components/admin/bot_detection/scripts.html' %}

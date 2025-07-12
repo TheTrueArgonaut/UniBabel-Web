@@ -1,0 +1,51 @@
+<!-- Settings Account Component -->
+<section class="settings-card" aria-labelledby="account-heading">
+    <h3 id="account-heading">👤 Account Settings</h3>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Display Name</h4>
+            <p>How others see your name</p>
+        </div>
+        <label for="displayName" class="sr-only">Enter your display name</label>
+        <input type="text"
+               id="displayName"
+               value="{{ current_user.display_name or current_user.username }}"
+               placeholder="Enter display name"
+               aria-describedby="display-name-help">
+        <div id="display-name-help" class="sr-only">This name will be shown to other users in
+            conversations
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Email Address</h4>
+            <p>Used for account recovery and notifications</p>
+        </div>
+        <label for="emailAddress" class="sr-only">Enter your email address</label>
+        <input type="email"
+               id="emailAddress"
+               value="{{ current_user.email }}"
+               placeholder="Enter email address"
+               aria-describedby="email-help">
+        <div id="email-help" class="sr-only">Email address for account security and important
+            notifications
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <div class="setting-label">
+            <h4>Two-Factor Authentication</h4>
+            <p>Add an extra layer of security to your account</p>
+        </div>
+        <button class="btn btn-secondary"
+                onclick="setup2FA()"
+                aria-describedby="2fa-help">
+            Setup 2FA
+        </button>
+        <div id="2fa-help" class="sr-only">Set up two-factor authentication for enhanced account
+            security
+        </div>
+    </div>
+</section>

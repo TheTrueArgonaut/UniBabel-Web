@@ -1,0 +1,102 @@
+<!-- 📝 PROFILE BABEL FEED MICROSERVICE -->
+<div class="main-component">
+    <div class="feed-header">
+        <div class="feed-title">✍️ "What's on your mind today?"</div>
+        <textarea class="babel-input input-base"
+                  placeholder="Share your thoughts, experiences, or start a conversation..."></textarea>
+        <div class="babel-actions">
+            <div class="babel-options">
+                <button class="babel-option btn-secondary">📱 Post</button>
+                <button class="babel-option btn-secondary">📸 Photo</button>
+                <button class="babel-option btn-secondary">💭 Thought</button>
+            </div>
+            <button class="babel-btn btn-primary">Babel It!</button>
+        </div>
+    </div>
+
+    <div class="feed-content">
+        <div id="babelPosts">
+            <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <p class="empty-title">No posts yet!</p>
+                <p class="empty-subtitle">Share your first thought to get started.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-component {
+        flex: 1;
+        background: var(--profile-bg-primary);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .feed-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--profile-border);
+        background: var(--profile-bg-secondary);
+    }
+
+    .feed-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .babel-input {
+        width: 100%;
+        min-height: 80px;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 14px;
+        resize: vertical;
+        margin-bottom: 10px;
+    }
+
+    .babel-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .babel-options {
+        display: flex;
+        gap: 10px;
+    }
+
+    .babel-option {
+        transition: all 0.3s ease;
+    }
+
+    .babel-btn {
+        font-weight: 500;
+    }
+
+    .feed-content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--profile-text-muted);
+    }
+
+    .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+    }
+
+    .empty-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .empty-subtitle {
+        font-size: 12px;
+    }
+</style>

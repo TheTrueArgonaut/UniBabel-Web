@@ -1,0 +1,151 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    <!-- Data Warehouse -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-primary/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <i class="ri-database-2-line text-2xl text-primary"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Data Warehouse</h3>
+                <p class="text-gray-400 text-sm">Access harvested data</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Browse and manage all collected user data, psychological
+            profiles, and behavioral patterns.</p>
+        <div class="flex gap-3">
+            <button onclick="loadDataWarehouse()"
+                    class="flex-1 bg-primary/10 text-primary px-4 py-2 rounded-lg hover:bg-primary/20 transition-colors text-sm">
+                <i class="ri-eye-line mr-2"></i>View Data
+            </button>
+            <button onclick="exportData()"
+                    class="flex-1 bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-lg hover:bg-yellow-500/20 transition-colors text-sm">
+                <i class="ri-download-line mr-2"></i>Export
+            </button>
+        </div>
+    </div>
+
+    <!-- User Profiles -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-blue-500/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                <i class="ri-user-search-line text-2xl text-blue-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">User Profiles</h3>
+                <p class="text-gray-400 text-sm">Browse user data</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Detailed user profiles with vulnerability scores, personal
+            data, and market values.</p>
+        <div class="flex gap-3">
+            <button onclick="loadUserProfiles()"
+                    class="flex-1 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-lg hover:bg-blue-500/20 transition-colors text-sm">
+                <i class="ri-group-line mr-2"></i>Browse
+            </button>
+            <button onclick="loadUserProfiles('value')"
+                    class="flex-1 bg-green-500/10 text-green-400 px-4 py-2 rounded-lg hover:bg-green-500/20 transition-colors text-sm">
+                <i class="ri-sort-desc mr-2"></i>By Value
+            </button>
+        </div>
+    </div>
+
+    <!-- Sales Management -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-green-500/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-green-500/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+                <i class="ri-money-dollar-circle-line text-2xl text-green-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Sales Management</h3>
+                <p class="text-gray-400 text-sm">Track revenue & sales</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Record data sales, track buyers, and manage revenue from
+            harvested user data.</p>
+        <div class="flex gap-3">
+            <button onclick="loadSalesData()"
+                    class="flex-1 bg-green-500/10 text-green-400 px-4 py-2 rounded-lg hover:bg-green-500/20 transition-colors text-sm">
+                <i class="ri-line-chart-line mr-2"></i>View Sales
+            </button>
+            <button onclick="recordSale()"
+                    class="flex-1 bg-primary/10 text-primary px-4 py-2 rounded-lg hover:bg-primary/20 transition-colors text-sm">
+                <i class="ri-add-line mr-2"></i>Record Sale
+            </button>
+        </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-purple-500/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                <i class="ri-bar-chart-2-line text-2xl text-purple-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Analytics</h3>
+                <p class="text-gray-400 text-sm">Performance metrics</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Revenue analytics, harvesting performance, and detailed system
+            health monitoring.</p>
+        <div class="flex gap-3">
+            <button onclick="loadAnalytics()"
+                    class="flex-1 bg-purple-500/10 text-purple-400 px-4 py-2 rounded-lg hover:bg-purple-500/20 transition-colors text-sm">
+                <i class="ri-pie-chart-line mr-2"></i>Analytics
+            </button>
+            <button onclick="loadSystemHealth()"
+                    class="flex-1 bg-yellow-500/10 text-yellow-400 px-4 py-2 rounded-lg hover:bg-yellow-500/20 transition-colors text-sm">
+                <i class="ri-pulse-line mr-2"></i>Health
+            </button>
+        </div>
+    </div>
+
+    <!-- User Management -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-cyan-500/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-cyan-500/10 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
+                <i class="ri-admin-line text-2xl text-cyan-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">User Management</h3>
+                <p class="text-gray-400 text-sm">Manage users & access</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Manage user accounts, permissions, and access levels for the
+            platform.</p>
+        <div class="flex gap-3">
+            <button onclick="loadUserManagement()"
+                    class="flex-1 bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-lg hover:bg-cyan-500/20 transition-colors text-sm">
+                <i class="ri-user-settings-line mr-2"></i>Manage
+            </button>
+            <button onclick="generateInvitation()"
+                    class="flex-1 bg-primary/10 text-primary px-4 py-2 rounded-lg hover:bg-primary/20 transition-colors text-sm">
+                <i class="ri-mail-send-line mr-2"></i>Invite
+            </button>
+        </div>
+    </div>
+
+    <!-- System Health -->
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700/50 group hover:border-orange-500/50 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-xl bg-orange-500/10 flex items-center justify-center group-hover:bg-orange-500/20 transition-colors">
+                <i class="ri-computer-line text-2xl text-orange-400"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">System Health</h3>
+                <p class="text-gray-400 text-sm">Monitor system status</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Real-time system monitoring, harvester status, and performance
+            metrics.</p>
+        <div class="flex gap-3">
+            <button onclick="loadSystemHealth()"
+                    class="flex-1 bg-orange-500/10 text-orange-400 px-4 py-2 rounded-lg hover:bg-orange-500/20 transition-colors text-sm">
+                <i class="ri-dashboard-line mr-2"></i>Status
+            </button>
+            <button onclick="loadSystemLogs()"
+                    class="flex-1 bg-gray-500/10 text-gray-400 px-4 py-2 rounded-lg hover:bg-gray-500/20 transition-colors text-sm">
+                <i class="ri-file-list-line mr-2"></i>Logs
+            </button>
+        </div>
+    </div>
+</div>

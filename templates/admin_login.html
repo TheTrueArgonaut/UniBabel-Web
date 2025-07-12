@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Administrative Access - UniBabel System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet"/>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        admin: {
+                            primary: "#ef4444",
+                            secondary: "#dc2626", 
+                            dark: "#0f0f0f",
+                            darker: "#050505",
+                            gray: "#1a1a1a",
+                            accent: "#991b1b"
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-admin-darker min-h-screen font-inter">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 rounded-full bg-admin-primary/10 flex items-center justify-center mb-6">
+                <i class="ri-shield-keyhole-line text-2xl text-admin-primary"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white">Administrative Access</h2>
+            <p class="mt-2 text-sm text-gray-400">UniBabel Data Management System</p>
+            <div class="mt-4 h-px bg-gradient-to-r from-transparent via-admin-primary to-transparent"></div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="adminLoginForm" class="mt-8 space-y-6">
+            <div class="space-y-4">
+                <div>
+                    <label for="admin-username" class="sr-only">Administrator Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-admin-line text-gray-400"></i>
+                        </div>
+                        <input id="admin-username" name="username" type="text" required
+                               class="relative block w-full pl-10 pr-3 py-3 border border-gray-700 bg-admin-gray text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent sm:text-sm"
+                               placeholder="Administrator Username">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="admin-password" class="sr-only">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-lock-line text-gray-400"></i>
+                        </div>
+                        <input id="admin-password" name="password" type="password" required
+                               class="relative block w-full pl-10 pr-12 py-3 border border-gray-700 bg-admin-gray text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent sm:text-sm"
+                               placeholder="Administrative Password">
+                        <button type="button"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                onclick="togglePassword('admin-password', this)">
+                            <i class="ri-eye-line text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-admin" name="remember" type="checkbox"
+                               class="h-4 w-4 text-admin-primary focus:ring-admin-primary border-gray-600 rounded bg-admin-gray">
+                        <label for="remember-admin" class="ml-2 block text-sm text-gray-300">
+                            Remember this device
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#"
+                           class="font-medium text-admin-primary hover:text-admin-secondary transition-colors">
+                            Security Protocol
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-admin-primary hover:bg-admin-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary transition-colors">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="ri-login-circle-line text-admin-secondary group-hover:text-admin-primary transition-colors"></i>
+                        </span>
+                    Access Administrative Panel
+                </button>
+            </div>
+
+            <div id="error-message"
+                 class="hidden p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm text-center">
+            </div>
+        </form>
+
+        <!-- Security Notice -->
+        <div class="mt-8 text-center">
+            <div class="bg-admin-gray/50 border border-gray-700 rounded-lg p-4">
+                <div class="flex items-center justify-center mb-2">
+                    <i class="ri-shield-check-line text-admin-primary mr-2"></i>
+                    <span class="text-sm font-medium text-gray-300">Secure Access</span>
+                </div>
+                <p class="text-xs text-gray-400">
+                    This is a restricted administrative interface. All access attempts are logged
+                    and monitored.
+                    Unauthorized access is prohibited and may result in legal action.
+                </p>
+            </div>
+        </div>
+
+        <!-- Request Access -->
+        <div class="text-center">
+            <p class="text-sm text-gray-400">
+                Need administrative access?
+                <a href="mailto:admin@unibabel.io?subject=Administrative%20Access%20Request"
+                   class="font-medium text-admin-primary hover:text-admin-secondary transition-colors">
+                    Request invitation
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.className = "ri-eye-off-line text-gray-400";
+        } else {
+            input.type = "password";
+            icon.className = "ri-eye-line text-gray-400";
+        }
+    }
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.classList.add('hidden');
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        try {
+            const response = await fetch('/admin/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = result.redirect || '/admin/dashboard';
+            } else {
+                errorDiv.textContent = result.error || 'Access denied. Invalid administrative credentials.';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Administrative system unavailable. Please try again later.';
+            errorDiv.classList.remove('hidden');
+        }
+    });
+
+    // Security: Clear form on page unload
+    window.addEventListener('beforeunload', function() {
+        document.getElementById('adminLoginForm').reset();
+
+});
+</script>
+</body>
+</html>

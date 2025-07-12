@@ -1,0 +1,275 @@
+<!-- Rooms Settings Component -->
+
+<!-- Room Settings Modal -->
+<div id="roomSettingsModal"
+     class="fixed inset-0 z-50 overflow-y-auto hidden"
+     aria-labelledby="room-settings-modal-title"
+     role="dialog"
+     aria-modal="true">
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"
+             aria-hidden="true"></div>
+
+        <div class="relative w-full max-w-4xl bg-secondary rounded-xl shadow-2xl">
+            <!-- Modal Header -->
+            <div class="border-b border-gray-700 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 id="room-settings-modal-title"
+                        class="text-xl font-bold text-white flex items-center">
+                        <i class="ri-settings-3-line text-primary mr-2"></i>
+                        Room Settings
+                    </h2>
+                    <button onclick="closeRoomSettings()"
+                            class="text-gray-400 hover:text-white transition-colors"
+                            aria-label="Close room settings">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="flex h-96">
+                <!-- Sidebar Navigation -->
+                <div class="w-64 bg-gray-800 rounded-bl-xl">
+                    <nav class="p-4 space-y-2">
+                        <button onclick="showSettingsTab('overview')"
+                                class="settings-tab w-full text-left px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors active"
+                                data-tab="overview">
+                            <i class="ri-home-line mr-2"></i>
+                            Overview
+                        </button>
+                        <button onclick="showSettingsTab('appearance')"
+                                class="settings-tab w-full text-left px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                                data-tab="appearance">
+                            <i class="ri-palette-line mr-2"></i>
+                            Appearance
+                        </button>
+                        <button onclick="showSettingsTab('members')"
+                                class="settings-tab w-full text-left px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                                data-tab="members">
+                            <i class="ri-team-line mr-2"></i>
+                            Members & Roles
+                        </button>
+                        <button onclick="showSettingsTab('moderation')"
+                                class="settings-tab w-full text-left px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                                data-tab="moderation">
+                            <i class="ri-shield-line mr-2"></i>
+                            Moderation
+                        </button>
+                        <button onclick="showSettingsTab('privacy')"
+                                class="settings-tab w-full text-left px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                                data-tab="privacy">
+                            <i class="ri-lock-line mr-2"></i>
+                            Privacy & Safety
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="flex-1 p-6 overflow-y-auto">
+                    <!-- Overview Tab -->
+                    <div id="overview-tab" class="settings-content">
+                        <h3 class="text-lg font-semibold text-white mb-4">Room Overview</h3>
+                        <div class="space-y-4">
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Room
+                                    Name</label>
+                                <input type="text" id="roomName"
+                                       class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                       placeholder="Enter room name...">
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                                <textarea id="roomDescription" rows="3"
+                                          class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                          placeholder="Describe your room..."></textarea>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Topic</label>
+                                <input type="text" id="roomTopic"
+                                       class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                       placeholder="What's this room about?">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Make Room
+                                        Discoverable</h4>
+                                    <p class="text-xs text-gray-400">Allow others to find and join
+                                        this room</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="isDiscoverableToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appearance Tab -->
+                    <div id="appearance-tab" class="settings-content hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4">Room Appearance</h3>
+                        <div class="space-y-4">
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Room
+                                    Color</label>
+                                <div class="flex space-x-2">
+                                    <input type="color" id="roomColor" value="#dc2626"
+                                           class="w-12 h-8 bg-gray-700 border border-gray-600 rounded cursor-pointer">
+                                    <input type="text" id="roomColorHex" value="#dc2626"
+                                           class="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                           placeholder="#dc2626">
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Welcome
+                                    Message</label>
+                                <textarea id="welcomeMessage" rows="3"
+                                          class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                          placeholder="Welcome new members to your room..."></textarea>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Room
+                                    Rules</label>
+                                <textarea id="roomRules" rows="4"
+                                          class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                          placeholder="Set guidelines for your room..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Members Tab -->
+                    <div id="members-tab" class="settings-content hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4">Members & Roles</h3>
+                        <div id="membersList" class="space-y-3">
+                            <!-- Members will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Moderation Tab -->
+                    <div id="moderation-tab" class="settings-content hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4">Moderation Settings</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Auto
+                                        Moderation</h4>
+                                    <p class="text-xs text-gray-400">Automatically filter
+                                        messages</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoModerate" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Slow
+                                    Mode (seconds)</label>
+                                <input type="number" id="slowModeSeconds" min="0" max="3600"
+                                       value="0"
+                                       class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <p class="text-xs text-gray-400 mt-1">0 = disabled, max 3600
+                                    seconds</p>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Message
+                                    History Limit</label>
+                                <input type="number" id="messageHistoryLimit" min="100" max="10000"
+                                       value="1000"
+                                       class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <p class="text-xs text-gray-400 mt-1">Number of messages to keep</p>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Banned
+                                    Words</label>
+                                <textarea id="bannedWords" rows="3"
+                                          class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                          placeholder="Enter words to ban, separated by commas..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy Tab -->
+                    <div id="privacy-tab" class="settings-content hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4">Privacy & Safety</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Hide Member
+                                        List</h4>
+                                    <p class="text-xs text-gray-400">Don't show members to other
+                                        users</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="hideMemberList">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Require Invite
+                                        Approval</h4>
+                                    <p class="text-xs text-gray-400">Manually approve new
+                                        members</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="requireInviteApproval">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Restrict File
+                                        Uploads</h4>
+                                    <p class="text-xs text-gray-400">Only allow admins to upload
+                                        files</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="restrictFileUploads">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-300">Disable Voice
+                                        Chat</h4>
+                                    <p class="text-xs text-gray-400">Turn off voice chat for this
+                                        room</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="disableVoiceChat">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Auto-Delete
+                                    Messages (days)</label>
+                                <input type="number" id="autoDeleteDays" min="0" max="365" value="0"
+                                       class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <p class="text-xs text-gray-400 mt-1">0 = never delete, max 365
+                                    days</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="border-t border-gray-700 px-6 py-4 flex justify-between">
+                <button onclick="deleteRoom()"
+                        class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white font-semibold transition-colors">
+                    Delete Room
+                </button>
+                <div class="space-x-3">
+                    <button onclick="closeRoomSettings()"
+                            class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg text-white transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="saveRoomSettings()"
+                            class="bg-primary hover:bg-red-700 px-4 py-2 rounded-lg text-white font-semibold transition-colors">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

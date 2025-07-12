@@ -1,0 +1,417 @@
+<!-- Create/Join Room Modal - Enhanced Multi-Step Experience -->
+<div id="createRoomModal"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 rounded-2xl max-w-2xl w-full mx-4 border border-gray-700 max-h-[90vh] overflow-hidden">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-700">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="ri-add-circle-line text-primary text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white" id="modalTitle">Create or Join
+                        Room</h3>
+                    <p class="text-sm text-gray-400" id="modalSubtitle">Choose how you want to
+                        connect</p>
+                </div>
+            </div>
+            <button onclick="hideCreateRoomModal()"
+                    class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors">
+                <i class="ri-close-line text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="px-6 pt-4" id="progressIndicator" style="display: none;">
+            <div class="flex items-center space-x-2 mb-2">
+                <div class="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-primary transition-all duration-300" id="progressBar"
+                         style="width: 33%"></div>
+                </div>
+                <span class="text-xs text-gray-400" id="progressText">Step 1 of 3</span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500">
+                <span id="step1Label" class="text-primary font-medium">Basic Info</span>
+                <span id="step2Label">Settings</span>
+                <span id="step3Label">Customize</span>
+            </div>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+
+            <!-- Initial Choice Screen -->
+            <div id="initialChoice" class="space-y-6">
+                <!-- Tab Navigation -->
+                <div class="flex mb-6 bg-gray-900 rounded-lg p-1">
+                    <button onclick="showModalTab('join')" id="joinTab"
+                            class="flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all border-2 border-primary text-primary bg-primary/10">
+                        <i class="ri-door-open-line mr-2"></i>Join Room
+                    </button>
+                    <button onclick="showModalTab('create')" id="createTab"
+                            class="flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all border-2 border-transparent text-gray-400 hover:text-white hover:bg-gray-700">
+                        <i class="ri-add-line mr-2"></i>Create Room
+                    </button>
+                </div>
+
+                <!-- Join Room Content -->
+                <div id="joinRoomContent" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="window.location.href='/rooms'"
+                                class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center space-y-2">
+                            <i class="ri-global-line text-2xl"></i>
+                            <span>Browse Public Rooms</span>
+                            <span class="text-xs opacity-80">Discover communities</span>
+                        </button>
+
+                        <button onclick="showPendingInvites()"
+                                class="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-medium py-4 px-6 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center space-y-2">
+                            <i class="ri-mail-line text-2xl"></i>
+                            <span>View Invitations</span>
+                            <span class="text-xs opacity-80" id="inviteCount">0 pending</span>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Or Enter Invite
+                            Code</label>
+                        <div class="relative">
+                            <input type="text" id="inviteCodeInput" placeholder="ROOM-12345..."
+                                   class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-primary">
+                            <button onclick="joinRoomByCode()"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                                <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Room Content -->
+                <div id="createRoomContent" class="space-y-6 hidden">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-home-3-line text-2xl text-primary"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Create Your Room</h4>
+                        <p class="text-gray-400 text-sm">Build a space for your community to connect
+                            and chat</p>
+                    </div>
+
+                    <button onclick="startRoomCreation()"
+                            class="w-full bg-gradient-to-r from-primary to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium py-4 px-6 rounded-xl transition-all transform hover:scale-105 flex items-center justify-center space-x-2">
+                        <i class="ri-rocket-line text-xl"></i>
+                        <span>Start Creating Room</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 1: Basic Information -->
+            <div id="step1" class="space-y-6 hidden">
+                <div class="text-center mb-6">
+                    <h4 class="text-lg font-semibold text-white mb-2">Basic Information</h4>
+                    <p class="text-gray-400 text-sm">Let's start with the essentials</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            <i class="ri-home-line mr-2"></i>Room Name *
+                        </label>
+                        <input type="text" id="roomNameInput" placeholder="My Awesome Room..."
+                               maxlength="100"
+                               class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-gray-500">Choose a memorable name</span>
+                            <span class="text-xs text-gray-500" id="nameCounter">0/100</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            <i class="ri-file-text-line mr-2"></i>Description
+                        </label>
+                        <textarea id="roomDescriptionInput" placeholder="What's this room about?"
+                                  maxlength="300" rows="3"
+                                  class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none"></textarea>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-gray-500">Help others understand your room's purpose</span>
+                            <span class="text-xs text-gray-500" id="descCounter">0/300</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-3">
+                            <i class="ri-shield-line mr-2"></i>Room Type
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="roomType" value="private" checked
+                                       class="sr-only">
+                                <div class="roomTypeCard bg-gray-700 border-2 border-primary rounded-lg p-4 transition-all hover:bg-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                                            <i class="ri-lock-line text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-semibold text-white">Private</h5>
+                                            <p class="text-xs text-gray-400">Invite-only room</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="roomType" value="public" class="sr-only">
+                                <div class="roomTypeCard bg-gray-700 border-2 border-transparent rounded-lg p-4 transition-all hover:bg-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                                            <i class="ri-global-line text-blue-400"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-semibold text-white">Public</h5>
+                                            <p class="text-xs text-gray-400">Anyone can discover</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="hideCreateRoomModal()"
+                            class="px-6 py-2 text-gray-400 hover:text-white transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="goToStep2()"
+                            class="px-6 py-2 bg-primary hover:bg-red-700 text-white rounded-lg transition-colors">
+                        Next: Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Room Settings -->
+            <div id="step2" class="space-y-6 hidden">
+                <div class="text-center mb-6">
+                    <h4 class="text-lg font-semibold text-white mb-2">Room Settings</h4>
+                    <p class="text-gray-400 text-sm">Configure how your room works</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Features -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="ri-function-line mr-2"></i>Features
+                        </h5>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                                        <i class="ri-mic-line text-green-400"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-white font-medium">Voice Chat</span>
+                                        <p class="text-xs text-gray-400">Enable WebRTC voice
+                                            communication</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="voiceChatEnabled"
+                                       class="w-4 h-4 text-primary bg-gray-600 border-gray-500 rounded focus:ring-primary">
+                            </label>
+
+                            <label class="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                                        <i class="ri-translate-2 text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-white font-medium">Auto Translation</span>
+                                        <p class="text-xs text-gray-400">Powered by DeepL Pro</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="autoTranslation" checked disabled
+                                       class="w-4 h-4 text-primary bg-gray-600 border-gray-500 rounded focus:ring-primary">
+                            </label>
+
+                            <label class="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center">
+                                        <i class="ri-shield-check-line text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-white font-medium">Content Moderation</span>
+                                        <p class="text-xs text-gray-400">AI-powered content
+                                            filtering</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="contentModeration" checked
+                                       class="w-4 h-4 text-primary bg-gray-600 border-gray-500 rounded focus:ring-primary">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Permissions -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="ri-user-settings-line mr-2"></i>Member Permissions
+                        </h5>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
+                                <div>
+                                    <span class="text-white font-medium">Anyone can invite others</span>
+                                    <p class="text-xs text-gray-400">Members can generate invite
+                                        codes</p>
+                                </div>
+                                <input type="checkbox" id="anyoneCanInvite"
+                                       class="w-4 h-4 text-primary bg-gray-600 border-gray-500 rounded focus:ring-primary">
+                            </label>
+
+                            <label class="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
+                                <div>
+                                    <span class="text-white font-medium">File uploads allowed</span>
+                                    <p class="text-xs text-gray-400">Members can share images and
+                                        files</p>
+                                </div>
+                                <input type="checkbox" id="fileUploads" checked
+                                       class="w-4 h-4 text-primary bg-gray-600 border-gray-500 rounded focus:ring-primary">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="goToStep1()"
+                            class="px-6 py-2 text-gray-400 hover:text-white transition-colors">Back
+                    </button>
+                    <div class="space-x-3">
+                        <button onclick="createRoomNow()"
+                                class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                            Create Room
+                        </button>
+                        <button onclick="goToStep3()"
+                                class="px-6 py-2 bg-primary hover:bg-red-700 text-white rounded-lg transition-colors">
+                            Customize
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Customization (Optional) -->
+            <div id="step3" class="space-y-6 hidden">
+                <div class="text-center mb-6">
+                    <h4 class="text-lg font-semibold text-white mb-2">Customize Your Room</h4>
+                    <p class="text-gray-400 text-sm">Make it uniquely yours</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Theme -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="ri-palette-line mr-2"></i>Room Theme
+                        </h5>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="roomTheme" value="default" checked
+                                       class="sr-only">
+                                <div class="themeCard border-2 border-primary rounded-lg p-3 text-center">
+                                    <div class="w-full h-8 bg-gradient-to-r from-gray-700 to-gray-600 rounded mb-2"></div>
+                                    <span class="text-xs text-white">Default</span>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input type="radio" name="roomTheme" value="blue" class="sr-only">
+                                <div class="themeCard border-2 border-transparent rounded-lg p-3 text-center hover:border-blue-500">
+                                    <div class="w-full h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded mb-2"></div>
+                                    <span class="text-xs text-white">Ocean</span>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input type="radio" name="roomTheme" value="purple" class="sr-only">
+                                <div class="themeCard border-2 border-transparent rounded-lg p-3 text-center hover:border-purple-500">
+                                    <div class="w-full h-8 bg-gradient-to-r from-purple-600 to-pink-400 rounded mb-2"></div>
+                                    <span class="text-xs text-white">Cosmic</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Custom Icon -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="ri-emotion-line mr-2"></i>Room Icon
+                        </h5>
+                        <div class="grid grid-cols-6 gap-2">
+                            <button type="button" onclick="selectRoomIcon('🏠')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-primary">
+                                🏠
+                            </button>
+                            <button type="button" onclick="selectRoomIcon('🎮')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-transparent">
+                                🎮
+                            </button>
+                            <button type="button" onclick="selectRoomIcon('📚')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-transparent">
+                                📚
+                            </button>
+                            <button type="button" onclick="selectRoomIcon('🎵')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-transparent">
+                                🎵
+                            </button>
+                            <button type="button" onclick="selectRoomIcon('💼')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-transparent">
+                                💼
+                            </button>
+                            <button type="button" onclick="selectRoomIcon('🌟')"
+                                    class="roomIconBtn w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-lg border-2 border-transparent">
+                                🌟
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Welcome Message -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="ri-chat-smile-line mr-2"></i>Welcome Message
+                        </h5>
+                        <textarea id="welcomeMessage"
+                                  placeholder="Welcome to our room! Please be respectful..."
+                                  maxlength="200" rows="3"
+                                  class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none"></textarea>
+                        <span class="text-xs text-gray-500" id="welcomeCounter">0/200</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="goToStep2()"
+                            class="px-6 py-2 text-gray-400 hover:text-white transition-colors">Back
+                    </button>
+                    <button onclick="createRoomNow()"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                        Create Room
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Moderation Warning -->
+        <div class="px-6 pb-6" id="moderationWarning">
+            <div class="bg-red-900/30 border border-red-500 rounded-lg p-4">
+                <div class="flex items-start space-x-2">
+                    <i class="ri-warning-line text-red-400 text-sm mt-0.5"></i>
+                    <div>
+                        <h5 class="text-red-300 font-medium text-sm">Content Moderation Active</h5>
+                        <p class="text-red-200 text-xs mt-1">
+                            AI moderators scan for inappropriate content. NSFW images and
+                            inappropriate behavior result in immediate bans.
+                            We cannot trust people with photo uploads - this is the internet after
+                            all.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Administrative Registration - UniBabel System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet"/>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        admin: {
+                            primary: "#ef4444",
+                            secondary: "#dc2626", 
+                            dark: "#0f0f0f",
+                            darker: "#050505",
+                            gray: "#1a1a1a",
+                            accent: "#991b1b"
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-admin-darker min-h-screen font-inter">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 rounded-full bg-admin-primary/10 flex items-center justify-center mb-6">
+                <i class="ri-user-add-line text-2xl text-admin-primary"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white">Administrative Registration</h2>
+            <p class="mt-2 text-sm text-gray-400">Invitation-Only Access to UniBabel Data Management
+                System</p>
+            <div class="mt-4 h-px bg-gradient-to-r from-transparent via-admin-primary to-transparent"></div>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="adminRegisterForm" class="mt-8 space-y-6">
+            <!-- Invitation Token -->
+            <div class="bg-admin-gray/30 border border-gray-600 rounded-lg p-4">
+                <label for="invitation-token" class="block text-sm font-medium text-gray-300 mb-2">
+                    <i class="ri-key-line mr-2"></i>Invitation Token
+                </label>
+                <input id="invitation-token" name="invitation_token" type="text" required
+                       class="w-full px-3 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent text-sm font-mono"
+                       placeholder="Enter your invitation token">
+                <p class="mt-1 text-xs text-gray-500">This token was provided in your invitation
+                    email</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="admin-username"
+                           class="block text-sm font-medium text-gray-300 mb-2">Administrator
+                        Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-user-line text-gray-400"></i>
+                        </div>
+                        <input id="admin-username" name="username" type="text" required
+                               class="w-full pl-10 pr-3 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent text-sm"
+                               placeholder="Admin username">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="admin-email" class="block text-sm font-medium text-gray-300 mb-2">Email
+                        Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-mail-line text-gray-400"></i>
+                        </div>
+                        <input id="admin-email" name="email" type="email" required
+                               class="w-full pl-10 pr-3 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent text-sm"
+                               placeholder="admin@company.com">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label for="display-name" class="block text-sm font-medium text-gray-300 mb-2">Full
+                    Name</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="ri-user-3-line text-gray-400"></i>
+                    </div>
+                    <input id="display-name" name="display_name" type="text" required
+                           class="w-full pl-10 pr-3 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent text-sm"
+                           placeholder="Your full name">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="admin-password"
+                           class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-lock-line text-gray-400"></i>
+                        </div>
+                        <input id="admin-password" name="password" type="password" required
+                               class="w-full pl-10 pr-12 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent text-sm"
+                               placeholder="Strong password">
+                        <button type="button"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                onclick="togglePassword('admin-password', this)">
+                            <i class="ri-eye-line text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="confirm-password"
+                           class="block text-sm font-medium text-gray-300 mb-2">Confirm
+                        Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ri-lock-line text-gray-400"></i>
+                        </div>
+                        <input id="confirm-password" name="confirm_password" type="password"
+                               required
+                               class="w-full pl-10 pr-12 py-2 border border-gray-600 bg-admin-gray text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                               placeholder="Confirm password">
+                        <button type="button"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                onclick="togglePassword('confirm-password', this)">
+                            <i class="ri-eye-line text-gray-400"></i>
+                        </button>
+                    </div>
+                    <div id="password-feedback" class="text-xs mt-1 min-h-[16px]"></div>
+                </div>
+            </div>
+
+            <!-- Role Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Administrative
+                    Role</label>
+                <div class="grid grid-cols-1 gap-3">
+                    <label class="relative flex items-start p-3 border border-gray-600 rounded-lg cursor-pointer hover:border-admin-primary transition-colors">
+                        <input type="radio" name="admin_role" value="data_manager" class="sr-only">
+                        <div class="w-4 h-4 border-2 border-gray-400 rounded-full mr-3 mt-0.5 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-admin-primary rounded-full opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-white">Data Manager</span>
+                            <p class="text-xs text-gray-400">Access to user data, analytics, and
+                                export functions</p>
+                        </div>
+                    </label>
+
+                    <label class="relative flex items-start p-3 border border-gray-600 rounded-lg cursor-pointer hover:border-admin-primary transition-colors">
+                        <input type="radio" name="admin_role" value="sales_manager" class="sr-only">
+                        <div class="w-4 h-4 border-2 border-gray-400 rounded-full mr-3 mt-0.5 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-admin-primary rounded-full opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-white">Sales Manager</span>
+                            <p class="text-xs text-gray-400">Manage data sales, buyer relationships,
+                                and revenue tracking</p>
+                        </div>
+                    </label>
+
+                    <label class="relative flex items-start p-3 border border-gray-600 rounded-lg cursor-pointer hover:border-admin-primary transition-colors">
+                        <input type="radio" name="admin_role" value="system_admin" class="sr-only">
+                        <div class="w-4 h-4 border-2 border-gray-400 rounded-full mr-3 mt-0.5 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-admin-primary rounded-full opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-white">System Administrator</span>
+                            <p class="text-xs text-gray-400">Full system access, user management,
+                                and security controls</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="flex items-start">
+                <div class="relative mt-1">
+                    <input type="checkbox" class="sr-only" id="admin-terms" name="terms" required/>
+                    <div class="w-4 h-4 bg-admin-gray border border-gray-600 rounded cursor-pointer flex items-center justify-center"
+                         onclick="toggleCheckbox('admin-terms', this)">
+                        <i class="ri-check-line text-admin-primary text-xs opacity-0 transition-opacity"></i>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-gray-300">
+                        I agree to the Administrative Terms of Service and understand that I am
+                        responsible for maintaining the security and confidentiality of all accessed
+                        data.
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-admin-primary hover:bg-admin-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary transition-colors">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="ri-shield-user-line text-admin-secondary group-hover:text-admin-primary transition-colors"></i>
+                        </span>
+                    Create Administrative Account
+                </button>
+            </div>
+
+            <div id="error-message"
+                 class="hidden p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm text-center">
+            </div>
+        </form>
+
+        <!-- Back to Login -->
+        <div class="text-center">
+            <p class="text-sm text-gray-400">
+                Already have administrative access?
+                <a href="/admin/auth/login"
+                   class="font-medium text-admin-primary hover:text-admin-secondary transition-colors">
+                    Sign in here
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.className = "ri-eye-off-line text-gray-400";
+        } else {
+            input.type = "password";
+            icon.className = "ri-eye-line text-gray-400";
+        }
+    }
+
+    function toggleCheckbox(inputId, container) {
+        const input = document.getElementById(inputId);
+        const icon = container.querySelector("i");
+
+        input.checked = !input.checked;
+
+        if (input.checked) {
+            container.classList.add("bg-admin-primary", "border-admin-primary");
+            container.classList.remove("bg-admin-gray", "border-gray-600");
+            icon.classList.remove("opacity-0");
+            icon.classList.add("opacity-100");
+        } else {
+            container.classList.remove("bg-admin-primary", "border-admin-primary");
+            container.classList.add("bg-admin-gray", "border-gray-600");
+            icon.classList.add("opacity-0");
+            icon.classList.remove("opacity-100");
+        }
+    }
+
+    // Radio button handling
+    document.querySelectorAll('input[name="admin_role"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('input[name="admin_role"]').forEach(r => {
+                const indicator = r.parentElement.querySelector('.w-2.h-2');
+                if (r.checked) {
+                    indicator.classList.remove('opacity-0');
+                    indicator.classList.add('opacity-100');
+                } else {
+                    indicator.classList.add('opacity-0');
+                    indicator.classList.remove('opacity-100');
+                }
+            });
+        });
+    });
+
+    // Password confirmation validation
+    document.getElementById('confirm-password').addEventListener('input', function(e) {
+        const password = document.getElementById('admin-password').value;
+        const confirmPassword = e.target.value;
+        const feedback = document.getElementById('password-feedback');
+        const confirmInput = document.getElementById('confirm-password');
+
+        if (confirmPassword && password !== confirmPassword) {
+            feedback.textContent = '✗ Passwords do not match';
+            feedback.className = 'text-xs mt-1 min-h-[16px] text-red-400';
+            confirmInput.classList.remove('focus:ring-green-500');
+            confirmInput.classList.add('focus:ring-red-500', 'border-red-500');
+        } else if (confirmPassword && password === confirmPassword) {
+            feedback.textContent = '✓ Passwords match';
+            feedback.className = 'text-xs mt-1 min-h-[16px] text-green-400';
+            confirmInput.classList.remove('focus:ring-red-500', 'border-red-500');
+            confirmInput.classList.add('focus:ring-green-500', 'border-green-500');
+        } else {
+            feedback.textContent = '';
+            feedback.className = 'text-xs mt-1 min-h-[16px]';
+            confirmInput.classList.remove('focus:ring-red-500', 'border-red-500', 'focus:ring-green-500', 'border-green-500');
+        }
+    });
+
+    document.getElementById('adminRegisterForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.classList.add('hidden');
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        // Check password match
+        if (data.password !== data.confirm_password) {
+            errorDiv.textContent = 'Passwords do not match';
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+
+        // Check role selection
+        if (!data.admin_role) {
+            errorDiv.textContent = 'Please select an administrative role';
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = result.redirect || '/admin/auth/login?registered=true';
+            } else {
+                errorDiv.textContent = result.error || 'Registration failed. Please check your invitation token.';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Administrative system unavailable. Please try again later.';
+            errorDiv.classList.remove('hidden');
+        }
+    });
+
+    // Auto-fill email if invitation token contains email
+    document.getElementById('invitation-token').addEventListener('input', function() {
+        // You could implement auto-fill logic here if tokens contain email info
+
+});
+</script>
+</body>
+</html>

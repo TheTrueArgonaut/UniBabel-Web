@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBabel - Profile Setup</title>
+    <style>
+        /* SRIMI: Micro-component profile setup */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .setup-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #2d2d2d;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .step-info {
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #1a1a1a;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #666;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            background: #404040;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .file-label:hover {
+            background: #555;
+        }
+        
+        .file-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .privacy-section {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .privacy-section h4 {
+            color: #ccc;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .privacy-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .privacy-option input[type="radio"] {
+            width: auto;
+        }
+        
+        .privacy-option label {
+            font-size: 12px;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .skip-btn {
+            flex: 1;
+            background: #333;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .skip-btn:hover {
+            background: #444;
+        }
+        
+        .continue-btn {
+            flex: 2;
+            background: #404040;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .continue-btn:hover {
+            background: #555;
+        }
+        
+        .error-message {
+            background: rgba(255, 107, 122, 0.1);
+            border: 1px solid rgba(255, 107, 122, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+            color: #ff6b7a;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .setup-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="setup-container">
+    <div class="header">
+        <h1 class="title">Tell us about yourself</h1>
+        <p class="subtitle">Help others find and connect with you</p>
+        <p class="step-info">Step 2 of 2: Profile Setup (Optional)</p>
+    </div>
+
+    <form id="profileForm">
+        <div class="form-group">
+            <label for="bio">About yourself</label>
+            <textarea id="bio" name="bio" placeholder="Tell us about yourself..."
+                      maxlength="200"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" id="occupation" name="occupation" placeholder="What do you do?"
+                       maxlength="50">
+            </div>
+            <div class="form-group">
+                <label for="education">Education</label>
+                <input type="text" id="education" name="education" placeholder="School/University"
+                       maxlength="50">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="timezone">Timezone</label>
+                <select id="timezone" name="timezone">
+                    <option value="">Select timezone</option>
+                    <option value="UTC-12">UTC-12 (Baker Island)</option>
+                    <option value="UTC-11">UTC-11 (Samoa)</option>
+                    <option value="UTC-10">UTC-10 (Hawaii)</option>
+                    <option value="UTC-9">UTC-9 (Alaska)</option>
+                    <option value="UTC-8">UTC-8 (Pacific)</option>
+                    <option value="UTC-7">UTC-7 (Mountain)</option>
+                    <option value="UTC-6">UTC-6 (Central)</option>
+                    <option value="UTC-5">UTC-5 (Eastern)</option>
+                    <option value="UTC-4">UTC-4 (Atlantic)</option>
+                    <option value="UTC-3">UTC-3 (Brazil)</option>
+                    <option value="UTC-2">UTC-2 (Mid-Atlantic)</option>
+                    <option value="UTC-1">UTC-1 (Azores)</option>
+                    <option value="UTC+0">UTC+0 (London)</option>
+                    <option value="UTC+1">UTC+1 (Berlin)</option>
+                    <option value="UTC+2">UTC+2 (Cairo)</option>
+                    <option value="UTC+3">UTC+3 (Moscow)</option>
+                    <option value="UTC+4">UTC+4 (Dubai)</option>
+                    <option value="UTC+5">UTC+5 (Karachi)</option>
+                    <option value="UTC+6">UTC+6 (Dhaka)</option>
+                    <option value="UTC+7">UTC+7 (Bangkok)</option>
+                    <option value="UTC+8">UTC+8 (Singapore)</option>
+                    <option value="UTC+9">UTC+9 (Tokyo)</option>
+                    <option value="UTC+10">UTC+10 (Sydney)</option>
+                    <option value="UTC+11">UTC+11 (New Caledonia)</option>
+                    <option value="UTC+12">UTC+12 (Fiji)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="interests">Favorite Topics</label>
+                <input type="text" id="interests" name="interests"
+                       placeholder="Music, Sports, Tech..." maxlength="100">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="profile_picture">Profile Picture</label>
+            <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+        </div>
+
+        <div class="privacy-section">
+            <h4>Privacy Settings</h4>
+            <div class="privacy-options">
+                <div class="privacy-option">
+                    <input type="radio" id="privacy_public" name="privacy" value="public" checked>
+                    <label for="privacy_public">Public Profile</label>
+                </div>
+                <div class="privacy-option">
+                    <input type="radio" id="privacy_private" name="privacy" value="private">
+                    <label for="privacy_private">Private Profile</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" class="skip-btn" onclick="skipSetup()">Skip for Now</button>
+            <button type="submit" class="continue-btn">Continue to Babel</button>
+        </div>
+    </form>
+
+    <div id="error-message" class="error-message" style="display: none;"></div>
+</div>
+
+<script>
+    // SRIMI: Micro profile service
+    const profileService = {
+        async saveProfile(data) {
+            try {
+                const response = await fetch('/profile/setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (error) {
+                return { error: true };
+            }
+        },
+        
+        async uploadProfilePicture(file) {
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+            
+            try {
+                const response = await fetch('/profile/upload-picture', {
+                    method: 'POST',
+                    body: formData
+                });
+                return await response.json();
+            } catch (error) {
+                return { error: true };
+            }
+        }
+    };
+    
+    // Skip setup
+    function skipSetup() {
+        window.location.href = '/profile';
+    }
+    
+    // Form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        // Upload profile picture first if selected
+        const fileInput = document.getElementById('profile_picture');
+        if (fileInput.files[0]) {
+            const uploadResult = await profileService.uploadProfilePicture(fileInput.files[0]);
+            if (uploadResult.success) {
+                data.profile_picture_url = uploadResult.url;
+            }
+        }
+        
+        // Save profile data
+        try {
+            const result = await profileService.saveProfile(data);
+            
+            if (result.success) {
+                window.location.href = '/profile';
+            } else {
+                const errorMsg = result.errors ? result.errors.join(', ') : 'Profile setup failed';
+                document.getElementById('error-message').textContent = errorMsg;
+                document.getElementById('error-message').style.display = 'block';
+            }
+        } catch (error) {
+            document.getElementById('error-message').textContent = 'Profile setup failed. Please try again.';
+            document.getElementById('error-message').style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

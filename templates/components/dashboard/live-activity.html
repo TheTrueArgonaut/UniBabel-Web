@@ -1,0 +1,60 @@
+<div class="mb-2">
+    <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-3 shadow-2xl border border-gray-700/50">
+        <div class="flex items-center gap-2 mb-3">
+            <div class="w-6 h-6 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <i class="ri-pulse-line text-green-400 text-xs"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white">Live Activity</h3>
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+        </div>
+
+        <!-- Live Stats Grid -->
+        <div class="space-y-2">
+            <!-- Online Users -->
+            <div class="flex items-center justify-between p-2 bg-[#111111] rounded-lg border border-gray-800">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-white text-xs font-medium">Users Online</span>
+                </div>
+                <span id="onlineCount" class="text-green-400 font-bold text-xs">0</span>
+            </div>
+
+            <!-- Today's Translations -->
+            <div class="flex items-center justify-between p-2 bg-[#111111] rounded-lg border border-gray-800">
+                <div class="flex items-center gap-2">
+                    <i class="ri-translate-2 text-blue-400 text-xs"></i>
+                    <span class="text-white text-xs font-medium">Today's Translations</span>
+                </div>
+                <span id="translationCount" class="text-blue-400 font-bold text-xs">0</span>
+            </div>
+
+            <!-- Active Rooms -->
+            <div class="flex items-center justify-between p-2 bg-[#111111] rounded-lg border border-gray-800">
+                <div class="flex items-center gap-2">
+                    <i class="ri-chat-3-line text-purple-400 text-xs"></i>
+                    <span class="text-white text-xs font-medium">Active Rooms</span>
+                </div>
+                <span id="activeRooms" class="text-purple-400 font-bold text-xs">0</span>
+            </div>
+
+            <!-- New Connections -->
+            <div class="flex items-center justify-between p-2 bg-[#111111] rounded-lg border border-gray-800">
+                <div class="flex items-center gap-2">
+                    <i class="ri-user-add-line text-yellow-400 text-xs"></i>
+                    <span class="text-white text-xs font-medium">New Connections</span>
+                </div>
+                <span id="newConnections" class="text-yellow-400 font-bold text-xs">0</span>
+            </div>
+        </div>
+
+        <!-- Recent Activity Ticker -->
+        <div class="mt-3 pt-2 border-t border-gray-700">
+            <div class="overflow-hidden">
+                <div id="activityTicker"
+                     class="text-xs text-gray-400 whitespace-nowrap animate-marquee">
+                    No recent activity yet
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

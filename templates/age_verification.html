@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Verification - UniBabel</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .verification-container {
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .birthday-form {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(55, 65, 81, 0.5);
+            border: 1px solid #4B5563;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .date-input:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+        }
+
+        .consent-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: #dc2626;
+        }
+
+        .consent-text {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .consent-link {
+            color: #dc2626;
+            text-decoration: none;
+        }
+
+        .consent-link:hover {
+            text-decoration: underline;
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            disabled: opacity 0.6;
+        }
+
+        .verify-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .verify-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #f87171;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .age-display {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .age-display.show {
+            display: block;
+        }
+
+        .age-text {
+            color: #22c55e;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .verification-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="verification-container">
+    <div class="logo">UniBabel</div>
+    <h1 class="title">Age Verification</h1>
+    <p class="subtitle">Please enter your birth date to continue</p>
+
+    <form class="birthday-form" id="birthdayForm">
+        <div class="form-group">
+            <label class="form-label" for="birthdate">Birth Date</label>
+            <input
+                    type="date"
+                    id="birthdate"
+                    class="date-input"
+                    required
+                    max="2010-12-31"
+            >
+            <div class="error-message" id="birthdateError"></div>
+        </div>
+
+        <div class="age-display" id="ageDisplay">
+            <div class="age-text" id="ageText"></div>
+        </div>
+
+        <div class="consent-checkbox">
+            <input type="checkbox" id="consent" required>
+            <label for="consent" class="consent-text">
+                I confirm that I am at least 18 years old and I consent to
+                <a href="/privacy-policy" target="_blank" class="consent-link">data collection</a>
+                as described in our Privacy Policy for users 18 and older.
+            </label>
+        </div>
+
+        <button type="submit" class="verify-button" id="verifyButton" disabled>
+            <i class="ri-check-line"></i>
+            Verify My Age
+        </button>
+    </form>
+    </div>
+
+    <script>
+        const birthdateInput = document.getElementById('birthdate');
+        const consentCheckbox = document.getElementById('consent');
+        const verifyButton = document.getElementById('verifyButton');
+        const ageDisplay = document.getElementById('ageDisplay');
+        const ageText = document.getElementById('ageText');
+        const birthdateError = document.getElementById('birthdateError');
+        const form = document.getElementById('birthdayForm');
+
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function updateButton() {
+            const age = birthdateInput.value ? calculateAge(birthdateInput.value) : 0;
+            const isValid = age >= 18 && consentCheckbox.checked;
+            verifyButton.disabled = !isValid;
+        }
+
+        birthdateInput.addEventListener('change', function() {
+            if (this.value) {
+                const age = calculateAge(this.value);
+                
+                if (age < 13) {
+                    ageText.textContent = `You are ${age} years old. Sorry, you must be at least 13 to use UniBabel.`;
+                    ageDisplay.style.background = 'rgba(239, 68, 68, 0.1)';
+                    ageDisplay.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                    ageText.style.color = '#ef4444';
+                } else if (age < 18) {
+                    ageText.textContent = `You are ${age} years old. You can use UniBabel with limited features (no data collection).`;
+                    ageDisplay.style.background = 'rgba(245, 158, 11, 0.1)';
+                    ageDisplay.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+                    ageText.style.color = '#f59e0b';
+                } else {
+                    ageText.textContent = `You are ${age} years old. You can use all UniBabel features.`;
+                    ageDisplay.style.background = 'rgba(34, 197, 94, 0.1)';
+                    ageDisplay.style.borderColor = 'rgba(34, 197, 94, 0.3)';
+                    ageText.style.color = '#22c55e';
+                }
+                
+                ageDisplay.classList.add('show');
+                birthdateError.style.display = 'none';
+            } else {
+                ageDisplay.classList.remove('show');
+            }
+            
+            updateButton();
+        });
+
+        consentCheckbox.addEventListener('change', updateButton);
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!birthdateInput.value) {
+                birthdateError.textContent = 'Please enter your birth date';
+                birthdateError.style.display = 'block';
+                return;
+            }
+
+            const age = calculateAge(birthdateInput.value);
+            
+            if (age < 13) {
+                birthdateError.textContent = 'You must be at least 13 years old to use UniBabel';
+                birthdateError.style.display = 'block';
+                return;
+            }
+
+            if (age >= 18 && !consentCheckbox.checked) {
+                birthdateError.textContent = 'Please confirm you consent to data collection';
+                birthdateError.style.display = 'block';
+                return;
+            }
+
+            // Submit the form
+            const formData = new FormData();
+            formData.append('birth_date', birthdateInput.value);
+            formData.append('age', age);
+            formData.append('consent', consentCheckbox.checked);
+
+            fetch('/api/verify-age', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                } else {
+                    birthdateError.textContent = data.error || 'Verification failed';
+                    birthdateError.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                birthdateError.textContent = 'An error occurred. Please try again.';
+                birthdateError.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

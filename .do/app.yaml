@@ -1,0 +1,52 @@
+name: unibabel
+region: nyc
+
+services:
+  - name: web
+    source_dir: /
+    github:
+      repo: your-username/unibabel-repo
+      branch: main
+    run_command: gunicorn --worker-class eventlet --workers 2 --bind 0.0.0.0:8080 main:app
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 8080
+
+    envs:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        type: SECRET
+      - key: DEEPL_API_KEY
+        type: SECRET
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+      - key: REDIS_URL
+        scope: RUN_AND_BUILD_TIME
+
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30
+      period_seconds: 10
+      timeout_seconds: 5
+      failure_threshold: 3
+
+databases:
+  - name: unibabel-db
+    engine: PG
+    version: "15"
+    production: false
+    cluster_name: unibabel-db-cluster
+
+  - name: unibabel-redis
+    engine: REDIS
+    version: "7"
+    production: false
+
+static_sites:
+  - name: unibabel-static
+    source_dir: static
+    index_document: index.html
+    catchall_document: index.html
+    environment_slug: html

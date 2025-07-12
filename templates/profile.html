@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ current_user.display_name or current_user.username }} - Profile</title>
+
+    <!-- MICROSERVICE STYLES -->
+    {% include 'components/profile_styles.html' %}
+</head>
+<body>
+<!-- PROFILE LAYOUT CONTAINER -->
+<div class="profile-container">
+    <!-- SIDEBAR MICROSERVICE -->
+    {% include 'components/profile_sidebar.html' %}
+
+        <!-- MAIN FEED MICROSERVICE -->
+        {% include 'components/profile_babel_feed.html' %}
+
+        <!-- CHAT PANEL MICROSERVICE -->
+        {% include 'components/profile_chat_panel.html' %}
+    </div>
+
+    <!-- JAVASCRIPT MICROSERVICES -->
+    <script src="{{ url_for('static', filename='js/profile_core.js') }}"></script>
+
+    <script>
+        // PROFILE ORCHESTRATOR - SRIMI COMPLIANT
+        // Single Responsibility: Application initialization & coordination
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Profile application initialized with microservices architecture');
+            
+            // Initialize core services
+            if (window.profileCore) {
+                console.log('Profile Core loaded');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>UniBabel - Create Account</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+          rel="stylesheet"/>
+
+    <!-- MICROSERVICE STYLES -->
+    {% include 'components/shared_layout.html' %}
+    {% include 'components/register_styles.html' %}
+    {% include 'components/register_verification_styles.html' %}
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#dc2626",
+                        secondary: "#1a1a1a",
+                    },
+                    borderRadius: {
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-gray-900 min-h-screen overflow-y-scroll">
+<!-- HEADER MICROSERVICE -->
+{% include 'components/register_header.html' %}
+
+<div class="relative z-10 flex items-center justify-center py-12 px-4">
+    <div class="register-container">
+            <form id="registerForm" class="space-y-6">
+                <!-- BASIC FORM MICROSERVICE -->
+                {% include 'components/register_basic_form.html' %}
+
+                <!-- AGE VERIFICATION MICROSERVICE -->
+                {% include 'components/register_age_verification.html' %}
+
+                <!-- FORM FOOTER MICROSERVICE -->
+                {% include 'components/register_footer.html' %}
+            </form>
+        </div>
+    </div>
+
+<!-- 🎯 MICROSERVICE ORCHESTRATION SCRIPTS -->
+<script src="{{ url_for('static', filename='components/scripts/core_orchestrator.js') }}"></script>
+<script src="{{ url_for('static', filename='components/scripts/error_service.js') }}"></script>
+<script src="{{ url_for('static', filename='components/scripts/loading_service.js') }}"></script>
+<script src="{{ url_for('static', filename='components/scripts/page_bootstrap.js') }}"></script>
+
+<!-- 🎯 VALIDATION MICROSERVICES -->
+<script src="{{ url_for('static', filename='js/validation/username_validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/email_validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/password_validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/display_name_validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/language_validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/age_validation.js') }}"></script>
+
+<!-- ID VALIDATION MICROSERVICES (Real OCR Implementation) -->
+<script src="{{ url_for('static', filename='js/validation/file_validation_service.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/image_analysis_service.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/document_detection_service.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/age_extraction_service.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/id_upload_ui_service.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation/id_upload_validation.js') }}"></script>
+
+<!-- 🎯 ORCHESTRATOR (Load Last) -->
+<script src="{{ url_for('static', filename='js/validation/orchestrator.js') }}"></script>
+
+<script>
+    // Form submission handling
+    async function handleRegistration(event) {
+        event.preventDefault();
+        
+        const submitButton = document.getElementById('submitButton');
+        const errorDisplay = document.getElementById('error-message');
+        const termsCheckbox = document.getElementById('terms');
+        
+        // Check terms agreement
+        if (!termsCheckbox.checked) {
+            showError('Please agree to the Terms of Service and Privacy Policy');
+            return;
+        }
+        
+        // Validate all fields
+        const isValid = await window.registerValidation.validateAll();
+        if (!isValid) {
+            showError('Please fix the validation errors above');
+            return;
+        }
+        
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i>Creating Account...';
+        
+        try {
+            // Collect form data
+            const formData = {
+                username: document.getElementById('username').value,
+                display_name: document.getElementById('display_name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                preferred_language: document.getElementById('preferred_language').value,
+                birth_date: document.getElementById('birth_date').value
+            };
+            
+            // Add ID verification data if available
+            const idService = window.registerValidation.getService('idUpload');
+            if (idService && idService.isIDVerified()) {
+                formData.id_verification_data = idService.getVerificationData();
+            }
+            
+            // Submit registration
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Success! Redirect to dashboard
+                showSuccess('Account created successfully! Redirecting...');
+                setTimeout(() => {
+                    window.location.href = result.redirect || '/dashboard';
+                }, 1500);
+            } else {
+                // Show errors
+                const errors = result.errors || [result.error || 'Registration failed'];
+                showError(errors.join(', '));
+            }
+            
+        } catch (error) {
+            console.error('Registration error:', error);
+            showError('Network error. Please try again.');
+        } finally {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Create Account';
+        }
+    }
+    
+    function showError(message) {
+        const errorDisplay = document.getElementById('error-message');
+        errorDisplay.textContent = message;
+        errorDisplay.classList.add('show');
+        errorDisplay.style.background = 'rgba(239, 68, 68, 0.1)';
+        errorDisplay.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+        errorDisplay.style.color = '#ef4444';
+    }
+    
+    function showSuccess(message) {
+        const errorDisplay = document.getElementById('error-message');
+        errorDisplay.textContent = message;
+        errorDisplay.classList.add('show');
+        errorDisplay.style.background = 'rgba(16, 185, 129, 0.1)';
+        errorDisplay.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+        errorDisplay.style.color = '#10b981';
+    }
+
+    // Initialize page with microservice orchestration
+    document.addEventListener('DOMContentLoaded', () => {
+        const registerPage = initializePage('register', {
+            services: ['error', 'loading', 'accessibility'],
+            debugMode: false,
+            analytics: true
+        });
+
+        // Attach form submission handler
+        const form = document.getElementById('registerForm');
+        if (form) {
+            form.addEventListener('submit', handleRegistration);
+        }
+
+        console.log('🎯 Register application initialized with microservices architecture');
+    });
+</script>
+</body>
+</html>

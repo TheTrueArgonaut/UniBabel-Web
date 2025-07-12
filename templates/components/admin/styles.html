@@ -1,0 +1,63 @@
+<style>
+    body {
+        background: #0a0a0a;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .primary-red { 
+        color: #dc2626; 
+    }
+    
+    .bg-cards { 
+        background: #111111; 
+    }
+    
+    /* Gothic styling */
+    .gothic-border {
+        border: 1px solid #3a3a3a;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .gothic-gradient {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #dc2626;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #b91c1c;
+    }
+    
+    /* Animation classes */
+    .fade-in {
+        animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Loading spinner */
+    .spinner {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>

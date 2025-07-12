@@ -1,0 +1,112 @@
+<!-- Rooms Styles Component -->
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#dc2626",
+                    secondary: "#1a1a1a",
+                    dark: "#0a0a0a",
+                    accent: "#374151"
+                },
+                fontFamily: {
+                    'poppins': ['Poppins', 'sans-serif']
+                }
+            }
+        }
+    };
+</script>
+
+<style>
+    :where([class^="ri-"])::before { content: "\f3c2"; }
+    
+    .room-card {
+        background: linear-gradient(145deg, #1f2937, #111827);
+        transition: all 0.3s ease;
+    }
+    
+    .room-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2);
+    }
+    
+    .language-badge {
+        background: linear-gradient(45deg, #059669, #10b981);
+    }
+    
+    .age-badge-child {
+        background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    }
+    
+    .age-badge-teen {
+        background: linear-gradient(45deg, #f59e0b, #d97706);
+    }
+    
+    .age-badge-adult {
+        background: linear-gradient(45deg, #dc2626, #b91c1c);
+    }
+    
+    .online-count {
+        background: linear-gradient(45deg, #10b981, #059669);
+        animation: pulse 2s infinite;
+    }
+    
+    /* Settings Modal Styles */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+    
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #374151;
+        border-radius: 24px;
+        transition: .4s;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        border-radius: 50%;
+        transition: .4s;
+    }
+    
+    input:checked + .slider {
+        background-color: #dc2626;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+    
+    .settings-tab.active {
+        background: #374151;
+        color: white;
+    }
+    
+    .settings-content {
+        display: block;
+    }
+    
+    .settings-content.hidden {
+        display: none;
+    }
+</style>
